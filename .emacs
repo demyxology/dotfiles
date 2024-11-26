@@ -33,8 +33,8 @@
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
 
-(setq-default explicit-shell-file-name "/run/current-system/sw/bin/bash")
-(setq-default shell-file-name "/run/current-system/sw/bin/bash")
+(setq-default explicit-shell-file-name "/run/current-system/sw/bin/zsh")
+(setq-default shell-file-name "/run/current-system/sw/bin/zsh")
 
 ;; gui config
 (menu-bar-mode -1)
@@ -85,51 +85,51 @@
                   (car args))
           (cdr args)))
   (advice-add #'completing-read-multiple :filter-args #'crm-indicator))
-  ;; ido mode
-  (setq ido-enable-flex-matching t)
-  (setq ido-everywhere t)
-  (ido-mode 1)
+;; ido mode
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode 1)
 
-  ;; nix-mode config
-  (use-package nix-mode
-    :mode ("\\.nix\\'" "\\.nix.in\\'"))
-  (use-package nix-drv-mode
-    :ensure nix-mode
-    :mode "\\.drv\\'")
-  (use-package nix-shell
-    :ensure nix-mode
-    :commands (nix-shell-unpack nix-shell-configure nix-shell-build))
-  (use-package nix-repl
-    :ensure nix-mode
-    :commands (nix-repl))
+;; nix-mode config
+(use-package nix-mode
+  :mode ("\\.nix\\'" "\\.nix.in\\'"))
+(use-package nix-drv-mode
+  :ensure nix-mode
+  :mode "\\.drv\\'")
+(use-package nix-shell
+  :ensure nix-mode
+  :commands (nix-shell-unpack nix-shell-configure nix-shell-build))
+(use-package nix-repl
+  :ensure nix-mode
+  :commands (nix-repl))
 
-  ;; pretty on save
-  ;; elisp
-  (defun autoindent-indent-whole-buffer ()
-    (indent-region (point-min) (point-max)))
+;; pretty on save
+;; elisp
+(defun autoindent-indent-whole-buffer ()
+  (indent-region (point-min) (point-max)))
 
-  (defvar autoindent-modes-list '(emacs-lisp-mode lisp-mode)
-    "Modes on which to auto-indent after save.")
+(defvar autoindent-modes-list '(emacs-lisp-mode lisp-mode)
+  "Modes on which to auto-indent after save.")
 
-  (defun autoindent-save-hook ()
-    (when (member major-mode autoindent-modes-list)
-      (autoindent-indent-whole-buffer)))
+(defun autoindent-save-hook ()
+  (when (member major-mode autoindent-modes-list)
+    (autoindent-indent-whole-buffer)))
 
-  (add-hook 'before-save-hook #'autoindent-save-hook)
+(add-hook 'before-save-hook #'autoindent-save-hook)
 
-  ;; nix
-  (add-hook 'nix-mode-hook
-            (lambda ()
-              (add-hook 'after-save-hook 'nix-format-buffer nil t)))
+;; nix
+(add-hook 'nix-mode-hook
+          (lambda ()
+            (add-hook 'after-save-hook 'nix-format-buffer nil t)))
 
-  ;; custom macros
+;; custom macros
 
-  ;; kill invisible buffers
-  (defun kill-background-buffers ()
-    "Kill all buffers not currently visible in any window."
-    (interactive)
-    (dolist (buffer (buffer-list))
-      (unless (get-buffer-window buffer 'visible)
-	(kill-buffer buffer))))
+;; kill invisible buffers
+(defun kill-background-buffers ()
+  "Kill all buffers not currently visible in any window."
+  (interactive)
+  (dolist (buffer (buffer-list))
+    (unless (get-buffer-window buffer 'visible)
+      (kill-buffer buffer))))
 
-  (global-set-key (kbd "C-c k") 'kill-background-buffers)
+(global-set-key (kbd "C-c k") 'kill-background-buffers)

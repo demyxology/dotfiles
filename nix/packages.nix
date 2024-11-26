@@ -2,6 +2,7 @@
 
 {
   commonPackages = with pkgs; [
+    bat
     fzf
     gnutls
     llvmPackages_19.clang-tools
@@ -11,6 +12,9 @@
     nmap
     plan9port
     pure-prompt
+    qemu
+    ripgrep
+    zoxide
     zsh
     zsh-autosuggestions
     zsh-syntax-highlighting
@@ -21,16 +25,15 @@
     [
     ];
 
-  nixosPackages =
-    with pkgs;
-    [
-          discord
+  nixosPackages = with pkgs; [
+    alacritty
+    discord
     drawterm
     emacs
     evolution
+    file
     git
     google-chrome
     vscode
-    whatsapp-for-linux
-    ];
+  ];
 }

@@ -50,7 +50,13 @@ in
 
   # Enable the Budgie Desktop environment.
   services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.desktopManager.budgie.enable = true;
+  services.xserver.desktopManager.cinnamon.enable = true;
+  services.cinnamon.apps.enable = true;
+
+  # NVIDIA graphics
+  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
+  hardware.nvidia.open = false;
+  services.xserver.videoDrivers = [ "nvidia" ];
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -69,6 +75,14 @@ in
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    extraConfig.pipewire."fix-popping" = {
+      "context.properties" = {
+        "default.clock.rate" = 48000;
+        "default.clock.quantum" = 512;
+        "default.clock.min-quantum" = 512;
+        "default.clock.max-quantum" = 512;
+      };
+    };
     # If you want to use JACK applications, uncomment this
     #jack.enable = true;
 
@@ -95,7 +109,12 @@ in
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = commonPkgs.commonPackages ++ commonPkgs.nixosPackages;
+  environment = {
+    systemPackages = commonPkgs.commonPackages ++ commonPkgs.nixosPackages;
+    variables = {
+      TERMINAL = "alacritty";
+    };
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
