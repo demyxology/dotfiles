@@ -1,101 +1,76 @@
-        { pkgs, ... }:
-        {
-          # List packages installed in system profile. To search by name, run:
-          # $ nix-env -qaP | grep wget
-          environment.systemPackages = with pkgs; [
-            fzf
-            gnutls
-            llvmPackages_19.clang-tools
-            llvmPackages_19.libcxxClang
-            neovim
-            nixfmt-rfc-style
-            nmap
-            plan9port
-            pure-prompt
-            zsh
-            zsh-autosuggestions
-            zsh-syntax-highlighting
-          ];
+{ pkgs, ... }:
 
-          programs.zsh = {
-            enable = true;
-            enableFzfCompletion = true;
-            enableFzfGit = true;
-            enableFzfHistory = true;
-            enableGlobalCompInit = true;
-            enableCompletion = true;
+let
+  commonPkgs = import ./packages.nix { inherit pkgs; };
+in
+{
+  environment.systemPackages = commonPkgs.commonPackages ++ commonPkgs.darwinPackages;
 
-            promptInit = ''
-              # Initialize Pure prompt
-              autoload -U promptinit && promptinit
-              prompt pure
-            '';
-          };
+  programs.zsh = {
+    enable = true;
+    enableFzfCompletion = true;
+    enableFzfGit = true;
+    enableFzfHistory = true;
+    enableGlobalCompInit = true;
+    enableCompletion = true;
 
-          environment.shellAliases = {
-            ll = "ls -l";
-            update = "sudo darwin-rebuild switch --flake ~/nix";
-            e = "emacsclient";
-            n = "nvim";
-            enix = "e ~/nix/flake.nix";
-          };
-          environment.shells = with pkgs; [ zsh ];
+    promptInit = ''
+      # Initialize Pure prompt
+      autoload -U promptinit && promptinit
+      prompt pure
+    '';
+  };
 
-          services.emacs = {
-            enable = true;
-          };
+  environment.shellAliases = {
+    ll = "ls -l";
+    update = "sudo darwin-rebuild switch --flake ~/nix";
+    e = "emacsclient";
+    n = "nvim";
+    enix = "e ~/nix/flake.nix";
+  };
+  environment.shells = with pkgs; [ zsh ];
 
-          nixpkgs.config = {
-            allowUnfree = true;
-          };
+  services.emacs = {
+    enable = true;
+  };
 
-          homebrew = {
-            enable = true;
-            onActivation.cleanup = "uninstall";
+  nixpkgs.config = {
+    allowUnfree = true;
+  };
 
-            taps = [ ];
-            brews = [ ];
-            casks = [ "emacs" ];
-          };
+  homebrew = {
+    enable = true;
+    onActivation.cleanup = "uninstall";
 
-          environment.variables = {
-            EDITOR = "emacsclient";
-          };
+    taps = [ ];
+    brews = [ ];
+    casks = [ "emacs" ];
+  };
 
-          nix.gc.automatic = true;
-          nix.optimise.automatic = true;
+  environment.variables = {
+    EDITOR = "emacsclient";
+  };
 
-          # Necessary for using flakes on this system.
-          nix.settings.experimental-features = [
-            "nix-command"
-            "flakes"
-          ];
-          # Auto upgrade nix package and the daemon service.
-          services.nix-daemon.enable = true;
+  nix.gc.automatic = true;
+  nix.optimise.automatic = true;
 
-          # Set Git commit hash for darwin-version.
-          system.configurationRevision = self.rev or self.dirtyRev or null;
+  # Necessary for using flakes on this system.
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
+  # Auto upgrade nix package and the daemon service.
+  services.nix-daemon.enable = true;
 
-          # Used for backwards compatibility, please read the changelog before changing.
-          # $ darwin-rebuild changelog
-          system.stateVersion = 5;
+  security.pam.enableSudoTouchIdAuth = true;
 
-          # The platform the configuration will be used on.
-          nixpkgs.hostPlatform = "aarch64-darwin";
+  nix.linux-builder.enable = true;
 
-          nix.extraOptions = ''
-            extra-platforms = x86_64-darwin aarch64-darwin
-          '';
+  documentation.man.enable = true;
 
-          security.pam.enableSudoTouchIdAuth = true;
-
-          nix.linux-builder.enable = true;
-
-          documentation.man.enable = true;
-
-          networking = {
-            hostName = "dad";
-            localHostName = "dad";
-            computerName = "dad";
-          };
-        }
+  networking = {
+    hostName = "dad";
+    localHostName = "dad";
+    computerName = "dad";
+  };
+}
