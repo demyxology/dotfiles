@@ -1,4 +1,3 @@
-(require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
 (custom-set-variables
@@ -18,8 +17,24 @@
  ;; If there is more than one, they won't work right.
  )
 
-;; set default shell for gui
-(setq shell-file-name "/run/current-system/sw/bin/zsh")
+;; host-specific
+(when (string= system-name "nixos" )
+  (load "server")
+  (unless (server-running-p) (server-start))
+
+  ;; font
+  (add-to-list 'default-frame-alist
+	       '(font . "DejaVu Sans Mono-14")))
+
+(when (string= system-name "dad" )
+  (set-frame-font "ComicShannsMono Nerd Font 14" nil t)
+
+  ;; copy shell path to .app
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
+
+(setq-default explicit-shell-file-name "/run/current-system/sw/bin/bash")
+(setq-default shell-file-name "/run/current-system/sw/bin/bash")
 
 ;; gui config
 (menu-bar-mode -1)
@@ -27,7 +42,6 @@
 (tool-bar-mode -1)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 (electric-indent-mode 1)
-(set-frame-font "ComicShannsMono Nerd Font 14" nil t)
 (setq initial-buffer-choice "~/")
 
 ;; keybinds
@@ -118,8 +132,4 @@
       (unless (get-buffer-window buffer 'visible)
 	(kill-buffer buffer))))
 
-  (global-set-key (kbd "C-c k") 'kill-non-visible-buffers)
-
-  ;; copy shell path to .app
-  (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize))
+  (global-set-key (kbd "C-c k") 'kill-background-buffers)
