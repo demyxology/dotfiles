@@ -34,6 +34,11 @@
     file
     git
     google-chrome
+    kitty
+    kitty-themes
+    mesa
+    spotify
+    steam
     vscode
   ];
 }

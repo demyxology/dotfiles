@@ -16,6 +16,8 @@ in
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
+
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -75,14 +77,6 @@ in
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    extraConfig.pipewire."fix-popping" = {
-      "context.properties" = {
-        "default.clock.rate" = 48000;
-        "default.clock.quantum" = 512;
-        "default.clock.min-quantum" = 512;
-        "default.clock.max-quantum" = 512;
-      };
-    };
     # If you want to use JACK applications, uncomment this
     #jack.enable = true;
 
@@ -102,6 +96,7 @@ in
       "networkmanager"
       "wheel"
     ];
+    shell = pkgs.zsh;
     packages = with pkgs; [
       #  thunderbird
     ];

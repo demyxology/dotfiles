@@ -5,6 +5,7 @@
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    nixgl.url = "github:nix-community/nixGL";
   };
 
   outputs =
@@ -12,6 +13,7 @@
       self,
       nix-darwin,
       nixpkgs,
+      nixgl,
     }:
     let
       # Create a function to generate system-specific configurations
