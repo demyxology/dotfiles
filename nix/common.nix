@@ -5,9 +5,9 @@
   # Shared ZSH configuration
   programs.zsh = {
     enable = true;
-    enableFzfCompletion = true;
-    enableFzfGit = true;
-    enableFzfHistory = true;
+    #    enableFzfCompletion = true;
+    #    enableFzfGit = true;
+    #    enableFzfHistory = true;
     enableGlobalCompInit = true;
     enableCompletion = true;
 
@@ -52,4 +52,6 @@
     };
     shells = with pkgs; [ zsh ];
   };
+
+  users.defaultUserShell = pkgs.zsh;
 }

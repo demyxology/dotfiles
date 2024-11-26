@@ -5,7 +5,7 @@
 { config, pkgs, ... }:
 
 let
-  commonPkgs = import ../common/packages.nix { inherit pkgs; };
+  commonPkgs = import ./packages.nix { inherit pkgs; };
 in
 {
   imports = [
@@ -93,22 +93,9 @@ in
     ];
   };
 
-  # Install firefox.
-  programs.firefox.enable = true;
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
-
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = commonPkgs.commonPackages ++ commonPkgs.nixosPackages;
-  
-  services.emacs.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

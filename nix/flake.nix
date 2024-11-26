@@ -7,7 +7,7 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-    outputs =
+  outputs =
     inputs@{
       self,
       nix-darwin,
@@ -15,21 +15,39 @@
     }:
     let
       # Create a function to generate system-specific configurations
-      mkSystem = systemType: configuration: 
-        if systemType == "darwin" then 
+      mkSystem =
+        systemType: configuration:
+        if systemType == "darwin" then
           nix-darwin.lib.darwinSystem {
             system = "aarch64-darwin";
-            modules = [ configuration ];
+            modules = [
+              ./common.nix
+              configuration
+              (
+                { pkgs, ... }:
+                {
+                  system.configurationRevision = self.rev or self.dirtyRev or null;
+                  system.stateVersion = 5;
+                  nixpkgs.hostPlatform = "aarch64-darwin";
+                  nix.extraOptions = ''
+                    extra-platforms = x86_64-darwin aarch64-darwin
+                  '';
+                }
+              )
+            ];
           }
-        else 
+        else
           nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
-            modules = [ configuration ];
+            modules = [
+              ./common.nix
+              configuration
+            ];
           };
-    in 
+    in
     {
-      darwinConfigurations."dad" = mkSystem "darwin" ./darwin/configuration.nix;
-      
+      darwinConfigurations."dad" = mkSystem "darwin" ./darwin.nix;
+
       nixosConfigurations.nixos = mkSystem "nixos" {
         imports = [
           ./hardware-configuration.nix
