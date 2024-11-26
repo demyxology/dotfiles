@@ -1,8 +1,8 @@
 {
-  description = "macos config";
+  description = "workstation configs";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
   };
@@ -14,7 +14,7 @@
       nixpkgs,
     }:
     let
-      configuration =
+      darwin-conf =
         { pkgs, ... }:
         {
           # List packages installed in system profile. To search by name, run:
@@ -118,12 +118,17 @@
         };
     in
     {
-      # Build darwin flake using:
-      # $ darwin-rebuild build --flake .#simple
       darwinConfigurations."dad" = nix-darwin.lib.darwinSystem {
-        modules = [ configuration ];
+        modules = [ darwin-conf ];
       };
 
       darwinPackages = self.darwinConfigurations."dad".pkgs;
+      nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./hardware-configuration.nix
+          ./configuration.nix
+        ];
+      };
     };
 }
