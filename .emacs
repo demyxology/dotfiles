@@ -1,21 +1,19 @@
+(require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-enabled-themes '(sanityinc-tomorrow-blue))
- '(custom-safe-themes
-   '("76ddb2e196c6ba8f380c23d169cf2c8f561fd2013ad54b987c516d3cabc00216" "f366d4bc6d14dcac2963d45df51956b2409a15b770ec2f6d730e73ce0ca5c8a7" default))
- '(package-selected-packages
-   '(color-theme-sanityinc-tomorrow exec-path-from-shell nixfmt zenburn-theme nix-mode)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+
+
+
+;; Bootstrap `use-package'
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
+
+(require 'use-package-ensure)
+(setq use-package-always-ensure t)
 
 ;; host-specific
 (when (string= system-name "nixos" )
@@ -43,6 +41,9 @@
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 (electric-indent-mode 1)
 (setq initial-buffer-choice "~/")
+(use-package color-theme-sanityinc-tomorrow
+  :config
+  (load-theme 'sanityinc-tomorrow-blue t))
 
 ;; keybinds
 ;; org mode
@@ -85,51 +86,64 @@
                   (car args))
           (cdr args)))
   (advice-add #'completing-read-multiple :filter-args #'crm-indicator))
-  ;; ido mode
-  (setq ido-enable-flex-matching t)
-  (setq ido-everywhere t)
-  (ido-mode 1)
+;; ido mode
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode 1)
 
-  ;; nix-mode config
-  (use-package nix-mode
-    :mode ("\\.nix\\'" "\\.nix.in\\'"))
-  (use-package nix-drv-mode
-    :ensure nix-mode
-    :mode "\\.drv\\'")
-  (use-package nix-shell
-    :ensure nix-mode
-    :commands (nix-shell-unpack nix-shell-configure nix-shell-build))
-  (use-package nix-repl
-    :ensure nix-mode
-    :commands (nix-repl))
+;; nix-mode config
+(use-package nix-mode
+  :mode ("\\.nix\\'" "\\.nix.in\\'"))
+(use-package nix-drv-mode
+  :ensure nix-mode
+  :mode "\\.drv\\'")
+(use-package nix-shell
+  :ensure nix-mode
+  :commands (nix-shell-unpack nix-shell-configure nix-shell-build))
+(use-package nix-repl
+  :ensure nix-mode
+  :commands (nix-repl))
 
-  ;; pretty on save
-  ;; elisp
-  (defun autoindent-indent-whole-buffer ()
-    (indent-region (point-min) (point-max)))
+;; pretty on save
+;; elisp
+(defun autoindent-indent-whole-buffer ()
+  (indent-region (point-min) (point-max)))
 
-  (defvar autoindent-modes-list '(emacs-lisp-mode lisp-mode)
-    "Modes on which to auto-indent after save.")
+(defvar autoindent-modes-list '(emacs-lisp-mode lisp-mode)
+  "Modes on which to auto-indent after save.")
 
-  (defun autoindent-save-hook ()
-    (when (member major-mode autoindent-modes-list)
-      (autoindent-indent-whole-buffer)))
+(defun autoindent-save-hook ()
+  (when (member major-mode autoindent-modes-list)
+    (autoindent-indent-whole-buffer)))
 
-  (add-hook 'before-save-hook #'autoindent-save-hook)
+(add-hook 'before-save-hook #'autoindent-save-hook)
 
-  ;; nix
-  (add-hook 'nix-mode-hook
-            (lambda ()
-              (add-hook 'after-save-hook 'nix-format-buffer nil t)))
+;; nix
+(add-hook 'nix-mode-hook
+          (lambda ()
+            (add-hook 'after-save-hook 'nix-format-buffer nil t)))
 
-  ;; custom macros
+;; custom macros
 
-  ;; kill invisible buffers
-  (defun kill-background-buffers ()
-    "Kill all buffers not currently visible in any window."
-    (interactive)
-    (dolist (buffer (buffer-list))
-      (unless (get-buffer-window buffer 'visible)
-	(kill-buffer buffer))))
+;; kill invisible buffers
+(defun kill-background-buffers ()
+  "Kill all buffers not currently visible in any window."
+  (interactive)
+  (dolist (buffer (buffer-list))
+    (unless (get-buffer-window buffer 'visible)
+      (kill-buffer buffer))))
 
-  (global-set-key (kbd "C-c k") 'kill-background-buffers)
+(global-set-key (kbd "C-c k") 'kill-background-buffers)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(company color-theme-sanityinc-tomorrow color-theme-tomorrow vertico nix-mode)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
