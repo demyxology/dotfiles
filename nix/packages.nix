@@ -5,6 +5,7 @@
     bat
     fzf
     gnutls
+    irssi
     llvmPackages_19.clang-tools
     llvmPackages_19.libcxxClang
     neovim

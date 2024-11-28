@@ -20,7 +20,7 @@ in
 
     taps = [ ];
     brews = [ ];
-    casks = [ "emacs" ];
+    casks = [ "emacs" "google-chrome" "visual-studio-code" "iterm2" "steam" ];
   };
 
   # Auto upgrade nix package and the daemon service.
