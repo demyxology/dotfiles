@@ -31,13 +31,12 @@
     discord
     drawterm
     emacs
-    evolution
     file
     git
     google-chrome
     kitty
     kitty-themes
-    mesa
+    monitor
     spotify
     steam
     vscode

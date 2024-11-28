@@ -18,7 +18,6 @@ in
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
-
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -107,9 +106,11 @@ in
   environment = {
     systemPackages = commonPkgs.commonPackages ++ commonPkgs.nixosPackages;
     variables = {
-      TERMINAL = "alacritty";
+      TERMINAL = "kitty";
     };
   };
+
+  programs.steam.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
