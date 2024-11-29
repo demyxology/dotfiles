@@ -5,9 +5,6 @@
   # Shared ZSH configuration
   programs.zsh = {
     enable = true;
-    #    enableFzfCompletion = true;
-    #    enableFzfGit = true;
-    #    enableFzfHistory = true;
     enableGlobalCompInit = true;
     enableCompletion = true;
 

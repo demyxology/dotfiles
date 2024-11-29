@@ -6,23 +6,46 @@ in
 {
   environment.systemPackages = commonPkgs.commonPackages ++ commonPkgs.darwinPackages;
 
+  programs.zsh = {
+    enableFzfCompletion = true;
+    enableFzfGit = true;
+    enableFzfHistory = true;
+  };
+
   environment.shellAliases = {
-    ll = "ls -l";
-    update = "sudo darwin-rebuild switch --flake ~/nix";
-    e = "emacsclient";
-    n = "nvim";
-    enix = "e ~/nix/flake.nix";
+    update = "darwin-rebuild switch --flake ~/nix";
   };
 
   homebrew = {
     enable = true;
-    onActivation.cleanup = "uninstall";
+    onActivation.cleanup = "zap";
 
     taps = [ ];
     brews = [ ];
-    casks = [ "emacs" "google-chrome" "visual-studio-code" "iterm2" "steam" ];
+    casks = [
+      "discord"
+      "emacs"
+      "google-chrome"
+      "visual-studio-code"
+      "iterm2"
+      "spotify"
+      "steam"
+    ];
+    masApps = {
+      "Messenger" = 454638411;
+      "WhatsApp" = 310633997;
+    };
   };
 
+  system.defaults = {
+    dock = {
+      autohide = true;
+      mineffect = "scale";
+      minimize-to-application = true;
+      static-only = true;
+    };
+  };
+  
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
 

@@ -1,3 +1,4 @@
+(require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
 (custom-set-variables
@@ -9,13 +10,27 @@
  '(custom-safe-themes
    '("76ddb2e196c6ba8f380c23d169cf2c8f561fd2013ad54b987c516d3cabc00216" "f366d4bc6d14dcac2963d45df51956b2409a15b770ec2f6d730e73ce0ca5c8a7" default))
  '(package-selected-packages
-   '(color-theme-sanityinc-tomorrow exec-path-from-shell nixfmt zenburn-theme nix-mode)))
+   '(magit company color-theme-sanityinc-tomorrow exec-path-from-shell nixfmt zenburn-theme nix-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+(package-initialize)
+
+;; Bootstrap `use-package'
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
+
+;; default all use-package invocations to ensure by default
+;; ie install if not already installed
+(setq use-package-always-ensure t)
 
 ;; host-specific
 (when (string= system-name "nixos" )
@@ -27,11 +42,12 @@
 	       '(font . "DejaVu Sans Mono-14")))
 
 (when (string= system-name "dad" )
-  (set-frame-font "ComicShannsMono Nerd Font 14" nil t)
+  (setq dired-use-ls-dired nil))
+;;  (set-frame-font "ComicShannsMono Nerd Font 14" nil t)
 
-  ;; copy shell path to .app
-  (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize)))
+;; copy shell path to .app
+;;  (when (memq window-system '(mac ns x))
+;;    (exec-path-from-shell-initialize)))
 
 (setq-default explicit-shell-file-name "/run/current-system/sw/bin/zsh")
 (setq-default shell-file-name "/run/current-system/sw/bin/zsh")
@@ -49,6 +65,13 @@
 (global-set-key (kbd "C-c l") #'org-store-link)
 (global-set-key (kbd "C-c a") #'org-agenda)
 (global-set-key (kbd "C-c c") #'org-capture)
+
+;; packages without specific config
+(use-package magit)
+
+;; company
+(use-package company)
+(add-hook 'after-init-hook 'global-company-mode)
 
 ;; Enable vertico
 (use-package vertico

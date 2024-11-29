@@ -27,7 +27,6 @@
     ];
 
   nixosPackages = with pkgs; [
-    alacritty
     discord
     drawterm
     emacs

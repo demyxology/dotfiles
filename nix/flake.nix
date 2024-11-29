@@ -5,7 +5,7 @@
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    nixgl.url = "github:nix-community/nixGL";
+    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
   };
 
   outputs =
@@ -13,7 +13,7 @@
       self,
       nix-darwin,
       nixpkgs,
-      nixgl,
+      nix-homebrew,
     }:
     let
       # Create a function to generate system-specific configurations
@@ -25,6 +25,15 @@
             modules = [
               ./common.nix
               configuration
+              nix-homebrew.darwinModules.nix-homebrew
+              {
+                nix-homebrew = {
+                  enable = true;
+                  enableRosetta = true;
+                  user = "nikita";
+                  autoMigrate = true;
+                };
+              }
               (
                 { pkgs, ... }:
                 {
