@@ -49,4 +49,9 @@
     };
     shells = with pkgs; [ zsh ];
   };
+
+  fonts.packages = with pkgs; [
+    nerdfonts
+  ];
+
 }

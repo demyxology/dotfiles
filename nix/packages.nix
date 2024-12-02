@@ -9,6 +9,7 @@
     llvmPackages_19.clang-tools
     llvmPackages_19.libcxxClang
     neovim
+    nerdfonts
     nixfmt-rfc-style
     nmap
     plan9port
