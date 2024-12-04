@@ -28,6 +28,7 @@
     ];
 
   nixosPackages = with pkgs; [
+    _9pfs
     discord
     drawterm
     emacs
@@ -39,6 +40,7 @@
     monitor
     spotify
     steam
+    thunderbird
     vscode
   ];
 }
