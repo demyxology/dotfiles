@@ -38,6 +38,7 @@
     kitty
     kitty-themes
     monitor
+    shutter
     spotify
     steam
     thunderbird

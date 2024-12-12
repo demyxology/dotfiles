@@ -66,9 +66,6 @@
 (global-set-key (kbd "C-c a") #'org-agenda)
 (global-set-key (kbd "C-c c") #'org-capture)
 
-;; packages without specific config
-(use-package magit)
-
 ;; company
 (use-package company)
 (add-hook 'after-init-hook 'global-company-mode)
