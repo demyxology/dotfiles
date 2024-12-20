@@ -26,6 +26,7 @@ in
       "discord"
       "emacs"
       "google-chrome"
+      "utm"
       "visual-studio-code"
       "iterm2"
       "spotify"

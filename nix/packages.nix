@@ -3,6 +3,7 @@
 {
   commonPackages = with pkgs; [
     bat
+    btop
     fzf
     gnutls
     irssi
@@ -16,6 +17,8 @@
     pure-prompt
     qemu
     ripgrep
+    tmux
+    zellij
     zoxide
     zsh
     zsh-autosuggestions
