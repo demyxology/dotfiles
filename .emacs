@@ -8,9 +8,9 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(sanityinc-tomorrow-blue))
  '(custom-safe-themes
-   '("76ddb2e196c6ba8f380c23d169cf2c8f561fd2013ad54b987c516d3cabc00216" "f366d4bc6d14dcac2963d45df51956b2409a15b770ec2f6d730e73ce0ca5c8a7" default))
+   '("e13beeb34b932f309fb2c360a04a460821ca99fe58f69e65557d6c1b10ba18c7" "76ddb2e196c6ba8f380c23d169cf2c8f561fd2013ad54b987c516d3cabc00216" "f366d4bc6d14dcac2963d45df51956b2409a15b770ec2f6d730e73ce0ca5c8a7" default))
  '(package-selected-packages
-   '(vertico beacon dashboard helpful avy company-nixos-options consult lsp-mode marginalia magit company color-theme-sanityinc-tomorrow exec-path-from-shell nixfmt zenburn-theme nix-mode)))
+   '(gruber-darker-theme vertico beacon dashboard helpful avy company-nixos-options consult lsp-mode marginalia magit company color-theme-sanityinc-tomorrow exec-path-from-shell nixfmt zenburn-theme nix-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

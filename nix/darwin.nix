@@ -25,7 +25,7 @@ in
     casks = [
       "discord"
       "emacs"
-      "google-chrome"
+      "firefox"
       "utm"
       "visual-studio-code"
       "iterm2"
@@ -46,7 +46,7 @@ in
       static-only = true;
     };
   };
-  
+
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
 
