@@ -26,6 +26,7 @@ in
       "discord"
       "emacs"
       "firefox"
+      "sonic-robo-blast-2"
       "utm"
       "visual-studio-code"
       "iterm2"
@@ -36,10 +37,6 @@ in
       "Messenger" = 454638411;
       "WhatsApp" = 310633997;
     };
-  };
-
-  services.emacs = {
-    enable = true;
   };
 
   system.defaults = {
