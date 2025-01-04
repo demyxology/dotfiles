@@ -34,19 +34,26 @@
 
   nixosPackages = with pkgs; [
     _9pfs
+    alsa-utils
+    bluez
     discord
     drawterm
     emacs
     file
+    firefox
     git
-    google-chrome
     kitty
     kitty-themes
+    libgcc
     monitor
+    nitrogen
+    python313Packages.ds4drv
     shutter
     spotify
     steam
     thunderbird
+    unzip
     vscode
+    whatsapp-for-linux
   ];
 }

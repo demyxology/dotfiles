@@ -16,9 +16,12 @@ in
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
-  boot.kernelParams = [ "intel_pstate=active" ];
-  
+  boot.kernelPackages = pkgs.linuxPackages;
+  boot.kernelParams = [
+    "nvidia-drm.fbdev=1"
+    "intel_pstate=active"
+  ];
+
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -48,12 +51,39 @@ in
   };
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
+  # services.xserver.enable = true;
+
+  environment.pathsToLink = [ "/libexec" ];
+
+  services.xserver = {
+    enable = true;
+    desktopManager = {
+      xterm.enable = false;
+      xfce = {
+        enable = true;
+        noDesktop = true;
+        enableXfwm = false;
+      };
+    };
+    windowManager.i3 = {
+      enable = true;
+      extraPackages = with pkgs; [
+        dmenu # application launcher most people use
+        i3status # gives you the default i3 status bar
+        i3lock # default i3 screen locker
+        i3blocks # if you are planning on using i3blocks over i3status
+      ];
+    };
+  };
+
+  services.displayManager.defaultSession = "xfce+i3";
+
+  programs.dconf.enable = true;
 
   # Enable the Budgie Desktop environment.
-  services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.desktopManager.cinnamon.enable = true;
-  services.cinnamon.apps.enable = true;
+  #services.xserver.displayManager.lightdm.enable = true;
+  #services.xserver.desktopManager.cinnamon.enable = true;
+  #services.cinnamon.apps.enable = true;
 
   # NVIDIA graphics
   hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
@@ -84,6 +114,10 @@ in
     # no need to redefine it in your config for now)
     #media-session.enable = true;
   };
+
+  hardware.bluetooth.enable = true; # enables support for Bluetooth
+  hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
+  services.blueman.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
