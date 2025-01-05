@@ -19,12 +19,6 @@
   environment.shellAliases = {
     ll = "ls -l";
     e = "emacsclient";
-    n = "nvim";
-  };
-
-  # Emacs service
-  services.emacs = {
-    enable = true;
   };
 
   # Common Nix settings
@@ -50,8 +44,13 @@
     shells = with pkgs; [ zsh ];
   };
 
-  fonts.packages = with pkgs; [
-    nerdfonts
-  ];
-
+  programs.git.config = {
+    init = {
+      defaultBranch = "main";
+    };
+    global.user = {
+      name = "Nikita";
+      email = "spicycoldnoodles@gmail.com";
+    };
+  };
 }

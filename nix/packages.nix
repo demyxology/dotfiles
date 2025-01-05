@@ -2,17 +2,13 @@
 
 {
   commonPackages = with pkgs; [
-    bat
     btop
     fzf
-    gnutls
+    git
     guile
-    helix
     irssi
     llvmPackages_19.clang-tools
     llvmPackages_19.libcxxClang
-    neovim
-    nerdfonts
     nixfmt-rfc-style
     nmap
     plan9port
@@ -35,25 +31,21 @@
   nixosPackages = with pkgs; [
     _9pfs
     alsa-utils
-    bluez
     discord
     drawterm
     emacs
     file
     firefox
-    git
+    ghostty
     kitty
     kitty-themes
-    libgcc
     monitor
     nitrogen
-    python313Packages.ds4drv
     shutter
     spotify
     steam
     thunderbird
     unzip
     vscode
-    whatsapp-for-linux
   ];
 }

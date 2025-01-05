@@ -16,7 +16,7 @@ in
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelParams = [
     "nvidia-drm.fbdev=1"
     "intel_pstate=active"
@@ -80,15 +80,30 @@ in
 
   programs.dconf.enable = true;
 
-  # Enable the Budgie Desktop environment.
   #services.xserver.displayManager.lightdm.enable = true;
   #services.xserver.desktopManager.cinnamon.enable = true;
   #services.cinnamon.apps.enable = true;
 
+  # Enable the gnome-keyring secrets vault.
+  # Will be exposed through DBus to programs willing to store secrets.
+  services.gnome.gnome-keyring.enable = true;
+
   # NVIDIA graphics
-  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
+  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
   hardware.nvidia.open = false;
   services.xserver.videoDrivers = [ "nvidia" ];
+
+  # Enable OpenGL
+  hardware.graphics = {
+    enable = true;
+  };
+
+  # Compositor
+  services.picom = {
+    enable = true;
+    backend = "egl";
+    vSync = true;
+  };
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -100,7 +115,7 @@ in
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -141,12 +156,17 @@ in
   environment = {
     systemPackages = commonPkgs.commonPackages ++ commonPkgs.nixosPackages;
     variables = {
-      TERMINAL = "kitty";
+      TERMINAL = "ghostty";
     };
   };
 
   programs.steam.enable = true;
 
+  # Emacs service
+  services.emacs = {
+    enable = true;
+  };
+  
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   programs.mtr.enable = true;
