@@ -43,14 +43,4 @@
     };
     shells = with pkgs; [ zsh ];
   };
-
-  programs.git.config = {
-    init = {
-      defaultBranch = "main";
-    };
-    global.user = {
-      name = "Nikita";
-      email = "spicycoldnoodles@gmail.com";
-    };
-  };
 }
