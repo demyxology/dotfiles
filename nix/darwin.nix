@@ -26,6 +26,7 @@ in
       "discord"
       "emacs"
       "firefox"
+      "ghostty"
       "sonic-robo-blast-2"
       "utm"
       "visual-studio-code"
