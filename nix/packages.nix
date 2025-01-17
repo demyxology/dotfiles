@@ -3,12 +3,16 @@
 {
   commonPackages = with pkgs; [
     btop
+    cmake
+    fd
+    findutils
     fzf
     git
     guile
     irssi
     llvmPackages_19.clang-tools
     llvmPackages_19.libcxxClang
+    mu
     nixfmt-rfc-style
     nmap
     plan9port
@@ -23,10 +27,8 @@
     zsh-syntax-highlighting
   ];
 
-  darwinPackages =
-    with pkgs;
-    [
-    ];
+  darwinPackages = with pkgs; [
+  ];
 
   nixosPackages = with pkgs; [
     _9pfs
