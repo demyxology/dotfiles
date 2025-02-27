@@ -33,6 +33,7 @@ in
       "iterm2"
       "spotify"
       "steam"
+      "warp"
     ];
     masApps = {
       "Messenger" = 454638411;
@@ -48,6 +49,8 @@ in
       static-only = true;
     };
   };
+
+  nixpkgs.config.allowUnsupportedSystem = true;
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;

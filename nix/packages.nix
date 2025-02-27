@@ -2,24 +2,32 @@
 
 {
   commonPackages = with pkgs; [
+    atuin
+    bat
     btop
     cmake
+    dust
     fd
     findutils
     fzf
     git
-    guile
     irssi
+    isync
     llvmPackages_19.clang-tools
     llvmPackages_19.libcxxClang
-    mu
     nixfmt-rfc-style
     nmap
+    nodejs
+    mc
     plan9port
     pure-prompt
+    pv
     qemu
     ripgrep
+    rlwrap
+    tldr
     tmux
+    tree
     zellij
     zoxide
     zsh
@@ -28,6 +36,7 @@
   ];
 
   darwinPackages = with pkgs; [
+    coreutils-prefixed
   ];
 
   nixosPackages = with pkgs; [
