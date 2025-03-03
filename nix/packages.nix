@@ -10,6 +10,7 @@
     fd
     findutils
     fzf
+    gcc
     git
     irssi
     isync

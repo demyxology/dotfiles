@@ -4,6 +4,7 @@ let
   commonPkgs = import ./packages.nix { inherit pkgs; };
 in
 {
+  nix.package = pkgs.nix;
   environment.systemPackages = commonPkgs.commonPackages ++ commonPkgs.darwinPackages;
 
   programs.zsh = {
@@ -52,10 +53,7 @@ in
 
   nixpkgs.config.allowUnsupportedSystem = true;
 
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
-
-  security.pam.enableSudoTouchIdAuth = true;
+  security.pam.services.sudo_local.touchIdAuth = true;
 
   nix.linux-builder.enable = true;
 
