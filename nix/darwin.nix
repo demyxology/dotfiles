@@ -4,7 +4,6 @@ let
   commonPkgs = import ./packages.nix { inherit pkgs; };
 in
 {
-  nix.package = pkgs.nix;
   environment.systemPackages = commonPkgs.commonPackages ++ commonPkgs.darwinPackages;
 
   programs.zsh = {

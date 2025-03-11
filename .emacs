@@ -1,3 +1,7 @@
+;; gc tuning for startup
+(setq gc-cons-threshold 100000000)
+(add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 800000)))
+
 ;; mepla
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -91,7 +95,19 @@
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
 (use-package dired-sidebar)
-
+(use-package nix-mode
+  :mode ("\\.nix\\'" "\\.nix.in\\'"))
+(use-package nixpkgs-fmt)
+(add-hook 'nix-mode-hook 'nixpkgs-fmt-on-save-mode)
+(use-package nix-drv-mode
+  :ensure nix-mode
+  :mode "\\.drv\\'")
+(use-package nix-shell
+  :ensure nix-mode
+  :commands (nix-shell-unpack nix-shell-configure nix-shell-build))
+(use-package nix-repl
+  :ensure nix-mode
+  :commands (nix-repl))
 ;; theme
 (use-package doom-themes
   :config
@@ -158,11 +174,11 @@
   :init
   (vertico-mode)
   :custom
-  (vertico-cycle t)               
-  (vertico-count 10)              
-  (vertico-resize t)              
-  (vertico-preselect 'prompt)     
-  :config 
+  (vertico-cycle t)
+  (vertico-count 10)
+  (vertico-resize t)
+  (vertico-preselect 'prompt)
+  :config
   (setq completion-auto-help t)
   (setq completion-show-inline-help t)
   (setq completion-auto-select 'completion-at-point))
@@ -237,6 +253,9 @@
   (setq lsp-enable-indentation nil)
   (setq lsp-enable-on-type-formatting nil))
 
+;; LSP tuning
+(setq read-process-output-max (* 1024 1024))
+
 ;; galaxy scrolling
 (defun galaxy-brain-scroll-amount ()
   (let* ((window-ypos (nth 1 (window-edges)))
@@ -255,9 +274,20 @@
 (global-set-key [wheel-up] 'my-mouse-wheel-scroll)
 (global-set-key [wheel-down] 'my-mouse-wheel-scroll)
 
-;; gc tuning
-(setq gc-cons-threshold 100000000)
-(add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 800000)))
-
-;; LSP tuning
-(setq read-process-output-max (* 1024 1024))
+;; irc
+(add-to-list 'rcirc-server-alist
+             '("irc.oftc.net"
+               :channels ("#cat-v")))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(nixpkgs-fmt nix-mode lsp-mode multiple-cursors tree-sitter-langs tree-sitter consult vertico dashboard doom-themes dired-sidebar expand-region smartparens ace-window helpful doom-modeline magit which-key yasnippet company orderless marginalia)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

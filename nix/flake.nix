@@ -33,6 +33,7 @@
                   user = "nikita";
                   autoMigrate = true;
                 };
+                nix.package = nixpkgs.legacyPackages.aarch64-darwin.nixVersions.latest;
               }
               (
                 { pkgs, ... }:
