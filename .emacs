@@ -27,9 +27,24 @@
 (setq-default tab-width 4)
 (delete-selection-mode 1)
 (set-frame-font "Berkeley Mono-14" nil t)
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
 (setq default-directory (expand-file-name "~/"))
 (setq command-line-default-directory (expand-file-name "~/"))
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(setq shell-file-name "/run/current-system/sw/bin/zsh")
+(setq explicit-shell-file-name "/run/current-system/sw/bin/zsh")
+(setq shell-command-switch "-lc")
+(defalias 'yes-or-no-p 'y-or-n-p)
+(define-key y-or-n-p-map (kbd "RET") 'act)
+;; Enable OSC-52 clipboard integration for terminals
+(when (and (not window-system)
+           (fboundp 'osc52-terminal-clipboard-mode))
+  (osc52-terminal-clipboard-mode 1))
+;; Add support for xterm-ghostty terminal
+(unless (assoc "xterm-ghostty" term-file-aliases)
+  (add-to-list 'term-file-aliases '("xterm-ghostty" . "xterm-256color")))
 
 ;; keybinds
 ;; text manipulation
@@ -112,6 +127,11 @@
 (use-package doom-themes
   :config
   (load-theme 'doom-one t))
+(use-package rcirc
+  :config
+  (add-to-list 'rcirc-server-alist
+               '("irc.oftc.net"
+                 :channels ("#cat-v"))))
 
 ;; dashboard
 (use-package dashboard
@@ -273,21 +293,3 @@
 
 (global-set-key [wheel-up] 'my-mouse-wheel-scroll)
 (global-set-key [wheel-down] 'my-mouse-wheel-scroll)
-
-;; irc
-(add-to-list 'rcirc-server-alist
-             '("irc.oftc.net"
-               :channels ("#cat-v")))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(nixpkgs-fmt nix-mode lsp-mode multiple-cursors tree-sitter-langs tree-sitter consult vertico dashboard doom-themes dired-sidebar expand-region smartparens ace-window helpful doom-modeline magit which-key yasnippet company orderless marginalia)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )

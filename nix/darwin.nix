@@ -13,7 +13,7 @@ in
   };
 
   environment.shellAliases = {
-    update = "darwin-rebuild switch --flake ~/nix";
+    update = "nix flake update --flake ~/nix/; darwin-rebuild switch --flake ~/nix";
   };
 
   homebrew = {
@@ -41,6 +41,20 @@ in
     };
   };
 
+  launchd.user.agents.emacs = {
+    serviceConfig = {
+      Label = "gnu.emacs.daemon";
+      ProgramArguments = [
+        "/Applications/Emacs.app/Contents/MacOS/Emacs"
+        "--daemon"
+      ];
+      RunAtLoad = true;
+      KeepAlive = true;
+      StandardOutPath = "/tmp/emacs-daemon.log";
+      StandardErrorPath = "/tmp/emacs-daemon.error.log";
+    };
+  };
+  
   system.defaults = {
     dock = {
       autohide = true;

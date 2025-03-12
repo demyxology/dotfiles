@@ -18,7 +18,7 @@
   # Common shell aliases
   environment.shellAliases = {
     ll = "ls -l";
-    e = "emacsclient";
+    e = "emacsclient -t";
   };
 
   # Common Nix settings
