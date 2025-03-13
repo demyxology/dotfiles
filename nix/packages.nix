@@ -51,6 +51,7 @@
     spotify
     steam
     thunderbird
+    tlsclient
     unzip
   ];
 }
