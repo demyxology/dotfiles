@@ -5,7 +5,6 @@
     atuin
     bat
     btop
-    cmake
     dust
     fd
     findutils
@@ -13,12 +12,10 @@
     gcc
     git
     irssi
-    isync
     llvmPackages_19.clang-tools
     llvmPackages_19.libcxxClang
     nixfmt-rfc-style
     nmap
-    nodejs
     mc
     plan9port
     pure-prompt
@@ -29,8 +26,6 @@
     tldr
     tmux
     tree
-    zellij
-    zoxide
     zsh
     zsh-autosuggestions
     zsh-syntax-highlighting
@@ -49,8 +44,6 @@
     file
     firefox
     ghostty
-    kitty
-    kitty-themes
     monitor
     nitrogen
     shutter
@@ -58,6 +51,5 @@
     steam
     thunderbird
     unzip
-    vscode
   ];
 }

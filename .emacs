@@ -110,7 +110,7 @@
 (use-package nix-mode
   :mode ("\\.nix\\'" "\\.nix.in\\'"))
 (use-package nixpkgs-fmt)
-(add-hook 'nix-mode-hook 'nixpkgs-fmt-on-save-mode)
+(add-hook 'nix-mode-hook 'nix-nixfmt-bin)
 (use-package nix-drv-mode
   :ensure nix-mode
   :mode "\\.drv\\'")
@@ -135,7 +135,7 @@
   (setq flycheck-clang-args '("--header-insertion=never"
                               "--clang-tidy"
                               "--completion-style=detailed")))
-
+(use-package nerd-icons)
 ;; dashboard
 (use-package dashboard
   :ensure t

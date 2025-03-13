@@ -51,38 +51,10 @@ in
   };
 
   # Enable the X11 windowing system.
-  # services.xserver.enable = true;
-
-  environment.pathsToLink = [ "/libexec" ];
-
-  services.xserver = {
-    enable = true;
-    desktopManager = {
-      xterm.enable = false;
-      xfce = {
-        enable = true;
-        noDesktop = true;
-        enableXfwm = false;
-      };
-    };
-    windowManager.i3 = {
-      enable = true;
-      extraPackages = with pkgs; [
-        dmenu # application launcher most people use
-        i3status # gives you the default i3 status bar
-        i3lock # default i3 screen locker
-        i3blocks # if you are planning on using i3blocks over i3status
-      ];
-    };
-  };
-
-  services.displayManager.defaultSession = "xfce+i3";
-
-  programs.dconf.enable = true;
-
-  #services.xserver.displayManager.lightdm.enable = true;
-  #services.xserver.desktopManager.cinnamon.enable = true;
-  #services.cinnamon.apps.enable = true;
+  services.xserver.enable = true;
+  services.xserver.displayManager.lightdm.enable = true;
+  services.xserver.desktopManager.cinnamon.enable = true;
+  services.cinnamon.apps.enable = true;
 
   # Enable the gnome-keyring secrets vault.
   # Will be exposed through DBus to programs willing to store secrets.
@@ -96,13 +68,6 @@ in
   # Enable OpenGL
   hardware.graphics = {
     enable = true;
-  };
-
-  # Compositor
-  services.picom = {
-    enable = true;
-    backend = "egl";
-    vSync = true;
   };
 
   # Configure keymap in X11
@@ -159,6 +124,9 @@ in
       TERMINAL = "ghostty";
     };
   };
+
+  # Use latest nix binary
+  nix.package = pkgs.nixVersions.latest;
 
   programs.steam.enable = true;
 
