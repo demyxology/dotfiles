@@ -26,6 +26,7 @@
     tldr
     tmux
     tree
+    vim
     zsh
     zsh-autosuggestions
     zsh-syntax-highlighting
