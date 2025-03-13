@@ -1,3 +1,4 @@
+;;; ...  -*- lexical-binding: t -*-
 ;; gc tuning for startup
 (setq gc-cons-threshold 100000000)
 (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 800000)))
@@ -33,16 +34,8 @@
 (setq default-directory (expand-file-name "~/"))
 (setq command-line-default-directory (expand-file-name "~/"))
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
-(setq shell-file-name "/run/current-system/sw/bin/zsh")
-(setq explicit-shell-file-name "/run/current-system/sw/bin/zsh")
-(setq shell-command-switch "-lc")
 (defalias 'yes-or-no-p 'y-or-n-p)
 (define-key y-or-n-p-map (kbd "RET") 'act)
-;; Enable OSC-52 clipboard integration for terminals
-(when (and (not window-system)
-           (fboundp 'osc52-terminal-clipboard-mode))
-  (osc52-terminal-clipboard-mode 1))
-;; Add support for xterm-ghostty terminal
 (unless (assoc "xterm-ghostty" term-file-aliases)
   (add-to-list 'term-file-aliases '("xterm-ghostty" . "xterm-256color")))
 
@@ -72,7 +65,10 @@
 ;; development
 (global-set-key (kbd "C-c w") 'whitespace-cleanup)
 (global-set-key (kbd "C-c c") 'compile)
-(global-set-key (kbd "C-c r") 'recompile)
+
+;; lsp
+(global-set-key (kbd "C-c d") 'lsp-find-definition)
+(global-set-key (kbd "C-c r") 'lsp-find-references)
 
 ;; evil keybinds
 ;; (evil-define-key 'visual 'global (kbd "ga") 'align)
@@ -91,11 +87,12 @@
 (use-package company
   :hook (prog-mode . company-mode)
   :config
-  (setq company-idle-delay 0.5)
+  (setq company-idle-delay 0.0)
   (setq company-minimum-prefix-length 2))
 (use-package yasnippet
   :config
   (yas-global-mode 1))
+(use-package yasnippet-snippets)
 (use-package which-key
   :config
   (which-key-mode))
@@ -132,26 +129,25 @@
   (add-to-list 'rcirc-server-alist
                '("irc.oftc.net"
                  :channels ("#cat-v"))))
+(use-package flycheck
+  :init (global-flycheck-mode)
+  :config
+  (setq flycheck-clang-args '("--header-insertion=never"
+                              "--clang-tidy"
+                              "--completion-style=detailed")))
 
 ;; dashboard
 (use-package dashboard
   :ensure t
   :config
   (dashboard-setup-startup-hook)
-
   (setq dashboard-startup-banner 'logo)
-
   (setq dashboard-startup-banner 'official)
-
   (setq dashboard-center-content t)
-  
   (setq dashboard-set-navigator t)
-  
   (setq dashboard-set-file-icons t)
   (setq dashboard-set-heading-icons t)
-  
   (setq dashboard-items '((recents  . 5)))
-
 
 (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*"))))
 
@@ -238,11 +234,6 @@
     ("M-s e" . consult-isearch-history)         ; Search history
     ("M-s l" . consult-line))                   ; Search line
   
-  :init
-  ;; Use Consult to select xref locations with preview
-  (setq xref-show-xrefs-function #'consult-xref
-        xref-show-definitions-function #'consult-xref)
-  
   :config
   ;; Configure preview behavior
   (setq consult-preview-key 'any)           ; Preview on any key
@@ -265,13 +256,32 @@
   :hook ((c-mode . lsp)
          (c++-mode . lsp))
   :config
-  (setq lsp-clients-clangd-args '("--header-insertion=never"
-                                  "--clang-tidy"
-                                  "--completion-style=detailed"))
-  (setq lsp-headerline-breadcrumb-enable t)
+  (setq lsp-headerline-breadcrumb-enable nil)
   (setq lsp-enable-symbol-highlighting t)
   (setq lsp-enable-indentation nil)
-  (setq lsp-enable-on-type-formatting nil))
+  (setq lsp-enable-on-type-formatting nil)
+  (setq lsp-modeline-diagnostics-enable t))
+
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode
+  :config
+  (setq lsp-ui-doc-enable t
+        lsp-ui-doc-use-childframe t
+        lsp-ui-doc-position 'top
+        lsp-ui-doc-include-signature t
+        lsp-ui-doc-winum-ignore nil
+        lsp-ui-doc-show-with-cursor t
+        lsp-ui-sideline-enable t
+        lsp-ui-sideline-show-hover nil
+        lsp-ui-sideline-show-diagnostics t
+        lsp-ui-sideline-ignore-duplicate t
+        lsp-ui-sideline-diagnostic-max-lines 5
+        lsp-ui-sideline-diagnostic-max-line-length 128
+        lsp-ui-peek-enable t))
+
+;; Make sure lsp-ui hooks into lsp-mode
+(add-hook 'lsp-mode-hook 'lsp-ui-mode)
 
 ;; LSP tuning
 (setq read-process-output-max (* 1024 1024))
