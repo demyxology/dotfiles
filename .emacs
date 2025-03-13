@@ -136,6 +136,8 @@
                               "--clang-tidy"
                               "--completion-style=detailed")))
 (use-package nerd-icons)
+(load "acme-mouse.el")
+
 ;; dashboard
 (use-package dashboard
   :ensure t
