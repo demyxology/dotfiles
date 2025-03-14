@@ -136,7 +136,7 @@
                               "--clang-tidy"
                               "--completion-style=detailed")))
 (use-package nerd-icons)
-(load "acme-mouse.el")
+(load-file "~/.emacs.d/acme-mouse.el")
 
 ;; dashboard
 (use-package dashboard
