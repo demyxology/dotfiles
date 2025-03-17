@@ -19,7 +19,6 @@
 (scroll-bar-mode -1)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (global-hl-line-mode t)
-;; (setq scroll-conservatively 100)
 (setq select-enable-clipboard t)
 (recentf-mode 1)
 (save-place-mode 1)
@@ -38,11 +37,12 @@
 (define-key y-or-n-p-map (kbd "RET") 'act)
 (unless (assoc "xterm-ghostty" term-file-aliases)
   (add-to-list 'term-file-aliases '("xterm-ghostty" . "xterm-256color")))
+(electric-pair-mode 1)
+(add-hook 'before-save-hook 'whitespace-cleanup)
 
 ;; keybinds
 ;; text manipulation
 (global-set-key (kbd "C-c a") 'align)
-(global-set-key (kbd "C-c r") 'align-regexp)
 (global-set-key (kbd "C-,") 'duplicate-line)
 (global-set-key (kbd "C-.") 'kill-whole-line)
 (global-set-key (kbd "C-c ,") 'copy-from-above-command)
@@ -56,22 +56,19 @@
 (global-set-key (kbd "M-g e") 'end-of-defun)
 
 ;; window management
-(global-set-key (kbd "C-c <left>")  'windmove-left)
-(global-set-key (kbd "C-c <right>") 'windmove-right)
-(global-set-key (kbd "C-c <up>")    'windmove-up)
-(global-set-key (kbd "C-c <down>")  'windmove-down)
-(global-set-key (kbd "C-c =") 'balance-windows)
+(global-set-key (kbd "C-<left>")  'windmove-left)
+(global-set-key (kbd "C-<right>") 'windmove-right)
+(global-set-key (kbd "C-<up>")    'windmove-up)
+(global-set-key (kbd "C-<down>")  'windmove-down)
 
 ;; development
-(global-set-key (kbd "C-c w") 'whitespace-cleanup)
 (global-set-key (kbd "C-c c") 'compile)
 
 ;; lsp
-(global-set-key (kbd "C-c d") 'lsp-find-definition)
-(global-set-key (kbd "C-c r") 'lsp-find-references)
-
-;; evil keybinds
-;; (evil-define-key 'visual 'global (kbd "ga") 'align)
+(global-set-key (kbd "C-c r") 'eglot-rename)
+(global-set-key (kbd "C-c h") 'eldoc)
+(global-set-key (kbd "C-c d") 'xref-find-definitions)
+(global-set-key (kbd "C-c x") 'xref-find-references)
 
 ;; use-package bootstrap & packages
 (unless (package-installed-p 'use-package)
@@ -80,8 +77,6 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-(use-package marginalia
-  :config (marginalia-mode))
 (use-package orderless
   :custom (completion-styles '(orderless basic)))
 (use-package company
@@ -89,10 +84,6 @@
   :config
   (setq company-idle-delay 0.0)
   (setq company-minimum-prefix-length 2))
-(use-package yasnippet
-  :config
-  (yas-global-mode 1))
-(use-package yasnippet-snippets)
 (use-package which-key
   :config
   (which-key-mode))
@@ -102,11 +93,6 @@
 (use-package helpful)
 (use-package ace-window
   :bind (("M-o" . ace-window)))
-(use-package smartparens
-  :hook (prog-mode . smartparens-mode))
-(use-package expand-region
-  :bind ("C-=" . er/expand-region))
-(use-package dired-sidebar)
 (use-package nix-mode
   :mode ("\\.nix\\'" "\\.nix.in\\'"))
 (use-package nixpkgs-fmt)
@@ -120,23 +106,20 @@
 (use-package nix-repl
   :ensure nix-mode
   :commands (nix-repl))
-;; theme
-(use-package doom-themes
-  :config
-  (load-theme 'doom-one t))
 (use-package rcirc
   :config
   (add-to-list 'rcirc-server-alist
                '("irc.oftc.net"
                  :channels ("#cat-v"))))
 (use-package flycheck
-  :init (global-flycheck-mode)
-  :config
-  (setq flycheck-clang-args '("--header-insertion=never"
-                              "--clang-tidy"
-                              "--completion-style=detailed")))
+  :init (global-flycheck-mode))
 (use-package nerd-icons)
 (load-file "~/.emacs.d/acme-mouse.el")
+
+;; theme
+(use-package doom-themes
+  :config
+  (load-theme 'doom-one t))
 
 ;; dashboard
 (use-package dashboard
@@ -153,41 +136,6 @@
 
 (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*"))))
 
-;; evil
-;; (use-package evil
-;;   :init      ;; tweak evil's configuration before loading it
-
-;;   (setq evil-want-keybinding nil)
-;;   (setq evil-vsplit-window-right t)
-;;   (setq evil-split-window-below t)
-;;   (setq evil-undo-system 'undo-redo)
-;;   :config    ;; tweak evil after loading it
-;;   (evil-mode 1)
-;;   (setcdr evil-insert-state-map nil)
-;;   (define-key evil-insert-state-map [escape] 'evil-normal-state) 
-;;   ;; example: make j/k move by visual lines, not actual lines
-;;   (evil-define-key 'normal 'global
-;;     "j" 'evil-next-visual-line
-;;     "k" 'evil-previous-visual-line))
-
-;; ;; For consistent evil keybindings across the rest of Emacs
-;; (use-package evil-collection
-;;   :after evil
-;;   :config
-;;   (evil-collection-init))
-
-;; ;; Enable surround functionality (like vim-surround)
-;; (use-package evil-surround
-;;   :after evil
-;;   :config
-;;   (global-evil-surround-mode 1))
-
-;; ;; Enable commenting operators (like gcc to comment lines)
-;; (use-package evil-commentary
-;;   :after evil
-;;   :config
-;;   (evil-commentary-mode))
-
 (use-package vertico
   :init
   (vertico-mode)
@@ -201,46 +149,6 @@
   (setq completion-show-inline-help t)
   (setq completion-auto-select 'completion-at-point))
 
-;; consult
-(use-package consult
-  :bind (
-    ;; C-x bindings in global map
-    ("C-x b" . consult-buffer)                  ; Enhanced buffer switching
-    ("C-x 4 b" . consult-buffer-other-window)   ; Buffer in other window
-    ("C-x r b" . consult-bookmark)              ; Bookmarks
-    ("C-x p b" . consult-project-buffer)        ; Project buffer
-    
-    ;; Search related
-    ("C-s" . consult-line)                      ; Search current buffer
-    ("M-s g" . consult-grep)                    ; Search with grep
-    ("M-s r" . consult-ripgrep)                 ; Search with ripgrep
-    ("M-s l" . consult-line)                    ; Line search
-    ("M-s f" . consult-find)                    ; Find file
-    ("M-s i" . consult-imenu)                   ; Jump to symbol
-    
-    ;; Register access
-    ("M-g i" . consult-imenu)                   ; Jump to heading/function
-    ("M-g o" . consult-outline)                 ; Jump to outline
-    ("M-g m" . consult-mark)                    ; Jump to mark
-    ("M-g k" . consult-global-mark)             ; Jump to global mark
-    
-    ;; More convenient M-y
-    ("M-y" . consult-yank-pop)                  ; Enhanced kill ring
-    
-    ;; Multi-file search
-    ("M-s e" . consult-isearch-history)         ; Search history
-    
-    ;; Isearch integration
-    :map isearch-mode-map
-    ("M-e" . consult-isearch-history)           ; Search history
-    ("M-s e" . consult-isearch-history)         ; Search history
-    ("M-s l" . consult-line))                   ; Search line
-  
-  :config
-  ;; Configure preview behavior
-  (setq consult-preview-key 'any)           ; Preview on any key
-  (setq consult-project-function nil))
-
 (use-package tree-sitter
   :hook (prog-mode . tree-sitter-mode)
   :config
@@ -253,37 +161,25 @@
          ("C-c C-<" . mc/mark-all-like-this)))
 
 ;; LSP
-(use-package lsp-mode
-  :commands lsp
-  :hook ((c-mode . lsp)
-         (c++-mode . lsp))
+(use-package eglot
+  :hook ((c-mode . eglot-ensure)
+         (c++-mode . eglot-ensure))
   :config
-  (setq lsp-headerline-breadcrumb-enable nil)
-  (setq lsp-enable-symbol-highlighting t)
-  (setq lsp-enable-indentation nil)
-  (setq lsp-enable-on-type-formatting nil)
-  (setq lsp-modeline-diagnostics-enable t))
+  (setq eglot-ignored-server-capabilities '(:documentHighlightProvider))
+  (setq eglot-sync-connect nil)
+  (setq eglot-connect-timeout 30)
+  (setq eglot-report-progress t)
+  (setq eglot-extend-to-xref t)
+  (setq-default eglot-workspace-configuration
+                '((:c :formatting (:indentWidth 4))
+                  (:cpp :formatting (:indentWidth 4))
+                  (:c :indexing (:trackReferences t))
+                  (:cpp :indexing (:trackReferences t))))
 
-(use-package lsp-ui
-  :ensure t
-  :commands lsp-ui-mode
-  :config
-  (setq lsp-ui-doc-enable t
-        lsp-ui-doc-use-childframe t
-        lsp-ui-doc-position 'top
-        lsp-ui-doc-include-signature t
-        lsp-ui-doc-winum-ignore nil
-        lsp-ui-doc-show-with-cursor t
-        lsp-ui-sideline-enable t
-        lsp-ui-sideline-show-hover nil
-        lsp-ui-sideline-show-diagnostics t
-        lsp-ui-sideline-ignore-duplicate t
-        lsp-ui-sideline-diagnostic-max-lines 5
-        lsp-ui-sideline-diagnostic-max-line-length 128
-        lsp-ui-peek-enable t))
-
-;; Make sure lsp-ui hooks into lsp-mode
-(add-hook 'lsp-mode-hook 'lsp-ui-mode)
+(setq eldoc-echo-area-use-multiline-p t)
+(setq eldoc-echo-area-display-truncation-message nil)
+(setq eldoc-echo-area-prefer-doc-buffer t)
+(setq eldoc-documentation-strategy #'eldoc-documentation-compose)
 
 ;; LSP tuning
 (setq read-process-output-max (* 1024 1024))
