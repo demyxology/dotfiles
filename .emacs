@@ -165,7 +165,6 @@
   :hook ((c-mode . eglot-ensure)
          (c++-mode . eglot-ensure))
   :config
-  (setq eglot-ignored-server-capabilities '(:documentHighlightProvider))
   (setq eglot-sync-connect nil)
   (setq eglot-connect-timeout 30)
   (setq eglot-report-progress t)
@@ -174,7 +173,7 @@
                 '((:c :formatting (:indentWidth 4))
                   (:cpp :formatting (:indentWidth 4))
                   (:c :indexing (:trackReferences t))
-                  (:cpp :indexing (:trackReferences t))))
+                  (:cpp :indexing (:trackReferences t)))))
 
 (setq eldoc-echo-area-use-multiline-p t)
 (setq eldoc-echo-area-display-truncation-message nil)
