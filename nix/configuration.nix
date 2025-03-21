@@ -125,6 +125,11 @@ in
     };
   };
 
+  environment.shellAliases = {
+    update = "nix flake update --flake ~/nix/.; sudo nixos-rebuild switch --flake ~/nix/. --upgrade";
+    gridup = "rlwrap ~/9pro/9gc nikita";
+  };
+
   # Use latest nix binary
   nix.package = pkgs.nixVersions.latest;
 
@@ -134,7 +139,7 @@ in
   services.emacs = {
     enable = true;
   };
-  
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   programs.mtr.enable = true;
@@ -149,14 +154,20 @@ in
   services.openssh = {
     enable = true;
     settings = {
-      PasswordAuthentication = false;
+      PasswordAuthentication = true;
       AllowUsers = [ "nikita" ];
       PermitRootLogin = "no";
     };
   };
 
   services.fail2ban.enable = true;
-  
+
+  virtualisation.virtualbox.host = {
+    enable = true;
+    enableKvm = true;
+    addNetworkInterface = false;
+  };
+
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];

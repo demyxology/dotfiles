@@ -5,6 +5,7 @@
     atuin
     bat
     btop
+    cmake
     dust
     fd
     findutils
@@ -47,6 +48,8 @@
     ghostty
     monitor
     nitrogen
+    obs-studio
+    shotcut
     shutter
     spotify
     steam
