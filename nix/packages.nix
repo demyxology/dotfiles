@@ -56,5 +56,7 @@
     thunderbird
     tlsclient
     unzip
+    xclip
+    xsel
   ];
 }
