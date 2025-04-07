@@ -39,21 +39,16 @@
 
   nixosPackages = with pkgs; [
     _9pfs
-    alsa-utils
     discord
     drawterm
     emacs
     file
     firefox
     ghostty
-    monitor
-    nitrogen
+    gnome-remote-desktop
     obs-studio
-    shotcut
-    shutter
     spotify
     steam
-    thunderbird
     tlsclient
     unzip
     xclip

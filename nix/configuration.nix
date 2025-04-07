@@ -16,7 +16,7 @@ in
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_testing;
   boot.kernelParams = [
     "nvidia-drm.fbdev=1"
     "intel_pstate=active"
@@ -50,16 +50,47 @@ in
     LC_TIME = "en_US.UTF-8";
   };
 
+  services.xserver.enable = true;
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
+  services.xserver.desktopManager.gnome.extraGSettingsOverrides = ''
+    [org.gnome.desktop.wm.preferences]
+    button-layout=':minimize,close'
+    [org.gnome.mutter]
+    experimental-features=['variable-refresh-rate', 'kms-modifiers']
+    '';
+
+  services.xrdp.enable = true;
+  services.xrdp.defaultWindowManager = "gnome-remote-desktop";
+  services.xrdp.openFirewall = true;
+
+  # Disable the GNOME3/GDM auto-suspend feature that cannot be disabled in GUI!
+  # If no user is logged in, the machine will power down after 20 minutes.
+  systemd.targets.sleep.enable = false;
+  systemd.targets.suspend.enable = false;
+  systemd.targets.hibernate.enable = false;
+  systemd.targets.hybrid-sleep.enable = false;
+
+  # For NVIDIA users, also add this
+  hardware.nvidia.modesetting.enable = true;
+
+  /*
   # Enable the X11 windowing system.
   services.xserver.enable = true;
   services.xserver.displayManager.lightdm.enable = true;
   services.xserver.desktopManager.cinnamon.enable = true;
   services.cinnamon.apps.enable = true;
 
+  # Configure keymap in X11
+  services.xserver.xkb = {
+    layout = "us";
+    variant = "";
+  };
+
   # Enable the gnome-keyring secrets vault.
   # Will be exposed through DBus to programs willing to store secrets.
   services.gnome.gnome-keyring.enable = true;
-
+  */
   # NVIDIA graphics
   hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
   hardware.nvidia.open = false;
@@ -68,12 +99,6 @@ in
   # Enable OpenGL
   hardware.graphics = {
     enable = true;
-  };
-
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
   };
 
   # Enable CUPS to print documents.
@@ -124,6 +149,10 @@ in
       TERMINAL = "ghostty";
     };
   };
+
+  fonts.packages = with pkgs; [
+    noto-fonts-emoji
+  ];
 
   environment.shellAliases = {
     update = "nix flake update --flake ~/nix/.; sudo nixos-rebuild switch --flake ~/nix/. --upgrade";
