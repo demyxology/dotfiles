@@ -42,6 +42,7 @@
     discord
     drawterm
     emacs
+    evolution
     file
     firefox
     ghostty
@@ -51,6 +52,8 @@
     steam
     tlsclient
     unzip
+    ventoy-full
+    wl-clipboard
     xclip
     xsel
   ];

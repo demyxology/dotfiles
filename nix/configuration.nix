@@ -14,13 +14,15 @@ in
   ];
 
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_testing;
-  boot.kernelParams = [
-    "nvidia-drm.fbdev=1"
-    "intel_pstate=active"
-  ];
+  boot = {
+    loader.systemd-boot.enable = true;
+    loader.efi.canTouchEfiVariables = true;
+    kernelPackages = pkgs.linuxPackages_latest;
+    kernelParams = [
+      "nvidia-drm.fbdev=1"
+      "intel_pstate=active"
+    ];
+  };
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
