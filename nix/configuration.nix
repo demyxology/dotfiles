@@ -53,9 +53,9 @@ in
   };
 
   services.xserver.enable = true;
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-  services.xserver.desktopManager.gnome.extraGSettingsOverrides = ''
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
+  services.desktopManager.gnome.extraGSettingsOverrides = ''
     [org.gnome.desktop.wm.preferences]
     button-layout=':minimize,close'
     [org.gnome.mutter]
@@ -102,6 +102,8 @@ in
   hardware.graphics = {
     enable = true;
   };
+
+  programs.gamemode.enable = true;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
