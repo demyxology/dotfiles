@@ -33,6 +33,7 @@ in
       "utm"
       "visual-studio-code"
       "iterm2"
+      "signal"
       "spotify"
       "steam"
       "warp"
