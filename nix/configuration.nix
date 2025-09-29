@@ -52,6 +52,7 @@ in
     LC_TIME = "en_US.UTF-8";
   };
 
+  /*
   services.xserver.enable = true;
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
@@ -72,11 +73,11 @@ in
   systemd.targets.suspend.enable = false;
   systemd.targets.hibernate.enable = false;
   systemd.targets.hybrid-sleep.enable = false;
+  */
 
   # For NVIDIA users, also add this
   hardware.nvidia.modesetting.enable = true;
 
-  /*
   # Enable the X11 windowing system.
   services.xserver.enable = true;
   services.xserver.displayManager.lightdm.enable = true;
@@ -92,7 +93,7 @@ in
   # Enable the gnome-keyring secrets vault.
   # Will be exposed through DBus to programs willing to store secrets.
   services.gnome.gnome-keyring.enable = true;
-  */
+
   # NVIDIA graphics
   hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
   hardware.nvidia.open = false;

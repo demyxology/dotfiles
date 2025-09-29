@@ -15,6 +15,7 @@
     irssi
     llvmPackages_19.clang-tools
     llvmPackages_19.libcxxClang
+    neovim
     nixfmt-rfc-style
     nmap
     mc
@@ -45,9 +46,16 @@
     evolution
     file
     firefox
+    fuzzel
     ghostty
     gnome-remote-desktop
+    helix
+    neovide
+    kakoune
+    lmstudio
     obs-studio
+    orca
+    signal-desktop
     spotify
     steam
     tlsclient
