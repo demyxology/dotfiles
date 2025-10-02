@@ -18,11 +18,17 @@ in
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
     kernelPackages = pkgs.linuxPackages_latest;
-    kernelParams = [
-      "nvidia-drm.fbdev=1"
-      "intel_pstate=active"
-    ];
+    kernelParams = [ "nvidia_drm.modeset=1" ];
+    kernelModules = [ "ntsync" ];
   };
+
+  fileSystems."/".options = [ "noatime" ];
+
+  services.udev.extraRules = ''
+    KERNEL=="ntsync", MODE="0660", TAG+="uaccess"
+  '';
+
+  powerManagement.cpuFreqGovernor = "performance";
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -104,8 +110,6 @@ in
     enable = true;
   };
 
-  programs.gamemode.enable = true;
-
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
@@ -167,7 +171,17 @@ in
   # Use latest nix binary
   nix.package = pkgs.nixVersions.latest;
 
-  programs.steam.enable = true;
+  programs.steam = {
+    enable = true;
+    gamescopeSession.enable = true;
+    package = pkgs.steam.override {
+      extraEnv = {
+        LD_PRELOAD = "${pkgs.gamemode.lib}/lib/libgamemodeauto.so.0";
+      };
+    };
+    # doesnt work for some reason, using protonup instead
+    # extraCompatPackages = [ pkgs.proton-ge-bin ];
+  };
 
   # Emacs service
   services.emacs = {

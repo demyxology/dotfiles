@@ -51,6 +51,7 @@
     gnome-remote-desktop
     helix
     neovide
+    protonup-qt
     kakoune
     lmstudio
     obs-studio
