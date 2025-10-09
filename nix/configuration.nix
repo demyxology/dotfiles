@@ -210,11 +210,15 @@ in
 
   services.fail2ban.enable = true;
 
+  # build takes forever & fails randomly
+  # re-enable when u actually need it
+  /*
   virtualisation.virtualbox.host = {
     enable = true;
     enableKvm = true;
     addNetworkInterface = false;
   };
+  */
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
