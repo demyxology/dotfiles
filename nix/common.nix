@@ -37,7 +37,7 @@
   # Common environment settings
   environment = {
     variables = {
-      EDITOR = "emacsclient";
+      EDITOR = "nvim";
     };
     shells = with pkgs; [ zsh ];
   };
