@@ -6,25 +6,32 @@
     bat
     btop
     cmake
+    discord
     dust
+    emacs
     fd
     findutils
     fzf
     gcc
     git
+    helix
     irssi
-    llvmPackages_19.clang-tools
-    llvmPackages_19.libcxxClang
+    kakoune
+    llvmPackages.libcxxClang
+    llvmPackages.clang-tools
+    mc
+    neovide
     neovim
     nixfmt-rfc-style
     nmap
-    mc
+    nodejs
     plan9port
     pure-prompt
     pv
     qemu
     ripgrep
     rlwrap
+    spotify
     tldr
     tmux
     tree
@@ -36,32 +43,28 @@
 
   darwinPackages = with pkgs; [
     coreutils-prefixed
+    ghostty-bin
+    iterm2
+    utm
+    vlc-bin
   ];
 
   nixosPackages = with pkgs; [
     _9pfs
-    discord
     drawterm
-    emacs
     evolution
     file
     firefox
     fuzzel
     ghostty
-    gnome-remote-desktop
-    helix
-    neovide
     protonup-qt
-    kakoune
-    lmstudio
     obs-studio
     orca
     signal-desktop
-    spotify
     steam
     tlsclient
     unzip
-    wl-clipboard
+    vscode
     xclip
     xsel
   ];

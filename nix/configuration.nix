@@ -18,7 +18,6 @@ in
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
     kernelPackages = pkgs.linuxPackages_latest;
-    kernelParams = [ "nvidia_drm.modeset=1" ];
     kernelModules = [ "ntsync" ];
   };
 
@@ -58,30 +57,6 @@ in
     LC_TIME = "en_US.UTF-8";
   };
 
-  /*
-  services.xserver.enable = true;
-  services.displayManager.gdm.enable = true;
-  services.desktopManager.gnome.enable = true;
-  services.desktopManager.gnome.extraGSettingsOverrides = ''
-    [org.gnome.desktop.wm.preferences]
-    button-layout=':minimize,close'
-    [org.gnome.mutter]
-    experimental-features=['variable-refresh-rate', 'kms-modifiers']
-    '';
-
-  services.xrdp.enable = true;
-  services.xrdp.defaultWindowManager = "gnome-remote-desktop";
-  services.xrdp.openFirewall = true;
-
-  # Disable the GNOME3/GDM auto-suspend feature that cannot be disabled in GUI!
-  # If no user is logged in, the machine will power down after 20 minutes.
-  systemd.targets.sleep.enable = false;
-  systemd.targets.suspend.enable = false;
-  systemd.targets.hibernate.enable = false;
-  systemd.targets.hybrid-sleep.enable = false;
-  */
-
-  # For NVIDIA users, also add this
   hardware.nvidia.modesetting.enable = true;
 
   # Enable the X11 windowing system.
@@ -183,7 +158,6 @@ in
     # extraCompatPackages = [ pkgs.proton-ge-bin ];
   };
 
-  # Emacs service
   services.emacs = {
     enable = true;
   };

@@ -2,10 +2,11 @@
   description = "workstation configs";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+    mac-app-util.url = "github:hraban/mac-app-util"; # fix mac gui apps
   };
 
   outputs =
@@ -14,9 +15,9 @@
       nix-darwin,
       nixpkgs,
       nix-homebrew,
+      mac-app-util
     }:
     let
-      # Create a function to generate system-specific configurations
       mkSystem =
         systemType: configuration:
         if systemType == "darwin" then
@@ -26,6 +27,7 @@
               ./common.nix
               configuration
               nix-homebrew.darwinModules.nix-homebrew
+              mac-app-util.darwinModules.default
               {
                 nix-homebrew = {
                   enable = true;

@@ -1,4 +1,3 @@
-# common/common.nix
 { pkgs, ... }:
 
 {
@@ -9,7 +8,6 @@
     enableCompletion = true;
 
     promptInit = ''
-      # Initialize Pure prompt
       autoload -U promptinit && promptinit
       prompt pure
     '';
