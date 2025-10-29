@@ -8,6 +8,7 @@ in
 
   system.primaryUser = "nikita";
 
+  #XXX want to move this to common but nixos doesnt share these?
   programs.zsh = {
     enableFzfCompletion = true;
     enableFzfGit = true;
@@ -24,7 +25,7 @@ in
 
     taps = [ ];
     brews = [ ];
-    # XXX: some nix packages misbehave on macos. check in on them to see if theyre fixed
+    #XXX: some nix packages misbehave on macos. check in on them to see if theyre fixed
     casks = [ 
       "appcleaner" # installs but literally doesnt appear??
       "firefox" # crashes on signin, firefox-bin doesnt launch
@@ -42,20 +43,6 @@ in
     */
   };
 
-  launchd.user.agents.emacs = {
-    serviceConfig = {
-      Label = "gnu.emacs.daemon";
-      ProgramArguments = [
-        "/Applications/Emacs.app/Contents/MacOS/Emacs"
-        "--daemon"
-      ];
-      RunAtLoad = true;
-      KeepAlive = true;
-      StandardOutPath = "/tmp/emacs-daemon.log";
-      StandardErrorPath = "/tmp/emacs-daemon.error.log";
-    };
-  };
-  
   system.defaults = {
     dock = {
       autohide = true;
@@ -78,4 +65,8 @@ in
     localHostName = "dad";
     computerName = "dad";
   };
+
+  # remember to set the login shell with
+  # chsh -s /run/current-system/sw/bin/zsh
+  # as nix-darwin can't (?) do it for you!
 }

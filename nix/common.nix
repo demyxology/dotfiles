@@ -1,7 +1,6 @@
 { pkgs, ... }:
 
 {
-  # Shared ZSH configuration
   programs.zsh = {
     enable = true;
     enableGlobalCompInit = true;
@@ -13,13 +12,15 @@
     '';
   };
 
-  # Common shell aliases
-  environment.shellAliases = {
-    ll = "ls -l";
-    e = "emacsclient -t";
+  services.emacs = {
+    enable = true;
   };
 
-  # Common Nix settings
+  environment.shellAliases = {
+    ll = "ls -l";
+    e = "nvim";
+  };
+
   nix = {
     gc.automatic = true;
     optimise.automatic = true;
@@ -29,12 +30,10 @@
     ];
   };
 
-  # Common package settings
   nixpkgs.config = {
     allowUnfree = true;
   };
 
-  # Common environment settings
   environment = {
     variables = {
       EDITOR = "nvim";

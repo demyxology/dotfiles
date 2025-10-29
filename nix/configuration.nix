@@ -149,17 +149,8 @@ in
   programs.steam = {
     enable = true;
     gamescopeSession.enable = true;
-    package = pkgs.steam.override {
-      extraEnv = {
-        LD_PRELOAD = "${pkgs.gamemode.lib}/lib/libgamemodeauto.so.0";
-      };
-    };
     # doesnt work for some reason, using protonup instead
     # extraCompatPackages = [ pkgs.proton-ge-bin ];
-  };
-
-  services.emacs = {
-    enable = true;
   };
 
   # Some programs need SUID wrappers, can be configured further or are

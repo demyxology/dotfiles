@@ -61,7 +61,6 @@
     obs-studio
     orca
     signal-desktop
-    steam
     tlsclient
     unzip
     vscode
