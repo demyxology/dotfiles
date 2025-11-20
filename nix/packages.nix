@@ -59,7 +59,7 @@
     ghostty
     protonup-qt
     obs-studio
-    orca
+    qbittorrent
     signal-desktop
     tlsclient
     unzip

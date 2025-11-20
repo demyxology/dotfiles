@@ -65,6 +65,9 @@ in
   services.xserver.desktopManager.cinnamon.enable = true;
   services.cinnamon.apps.enable = true;
 
+  #FIXME: gnome update forces this on for some reason?
+  systemd.user.services.orca.enable = false;
+
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
