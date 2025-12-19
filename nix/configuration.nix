@@ -25,6 +25,7 @@ in
 
   services.udev.extraRules = ''
     KERNEL=="ntsync", MODE="0660", TAG+="uaccess"
+    SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="0337", MODE="0666"
   '';
 
   powerManagement.cpuFreqGovernor = "performance";
@@ -79,7 +80,7 @@ in
   services.gnome.gnome-keyring.enable = true;
 
   # NVIDIA graphics
-  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
+  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
   hardware.nvidia.open = false;
   services.xserver.videoDrivers = [ "nvidia" ];
 
@@ -177,6 +178,8 @@ in
   };
 
   services.fail2ban.enable = true;
+
+  services.flatpak.enable = true;
 
   # build takes forever & fails randomly
   # re-enable when u actually need it

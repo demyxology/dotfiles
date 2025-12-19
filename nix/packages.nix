@@ -7,6 +7,7 @@
     btop
     cmake
     discord
+    dolphin-emu
     dust
     emacs
     fd
