@@ -52,6 +52,7 @@
 
   nixosPackages = with pkgs; [
     _9pfs
+    ardour
     drawterm
     evolution
     file
@@ -59,10 +60,12 @@
     fuzzel
     ghostty
     protonup-qt
+    rpcs3
     obs-studio
     qbittorrent
     signal-desktop
-    tlsclient
+    # FIXME: package broken -- contact moody?
+    #tlsclient
     unzip
     vscode
     xclip
