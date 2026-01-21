@@ -23,7 +23,7 @@
     mc
     neovide
     neovim
-    nixfmt-rfc-style
+    nixfmt
     nmap
     nodejs
     plan9port
