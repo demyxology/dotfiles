@@ -7,7 +7,6 @@
     btop
     cmake
     discord
-    dolphin-emu
     dust
     emacs
     fd
@@ -53,6 +52,7 @@
   nixosPackages = with pkgs; [
     _9pfs
     ardour
+    dolphin-emu
     drawterm
     file
     firefox

@@ -28,6 +28,7 @@ in
     #XXX: some nix packages misbehave on macos. check in on them to see if theyre fixed
     casks = [ 
       "appcleaner" # installs but literally doesnt appear??
+      "dolphin" # fails to build
       "firefox" # crashes on signin, firefox-bin doesnt launch
       "signal" # base app fails to build, bin version is woefully out of date
       "steam" # no nix-darwin candidate
