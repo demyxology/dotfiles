@@ -19,6 +19,7 @@ in
     loader.efi.canTouchEfiVariables = true;
     kernelPackages = pkgs.linuxPackages_latest;
     kernelModules = [ "ntsync" ];
+    initrd.kernelModules = [ "nvidia" ];
   };
 
   fileSystems."/".options = [ "noatime" ];
@@ -80,7 +81,8 @@ in
   services.gnome.gnome-keyring.enable = true;
 
   # NVIDIA graphics
-  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
+  # hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
+  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
   hardware.nvidia.open = false;
   services.xserver.videoDrivers = [ "nvidia" ];
 
@@ -183,13 +185,11 @@ in
 
   # build takes forever & fails randomly
   # re-enable when u actually need it
-  /*
   virtualisation.virtualbox.host = {
     enable = true;
     enableKvm = true;
     addNetworkInterface = false;
   };
-  */
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

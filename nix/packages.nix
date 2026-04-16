@@ -54,7 +54,6 @@
     _9pfs
     ardour
     drawterm
-    evolution
     file
     firefox
     fuzzel
