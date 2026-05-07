@@ -55,7 +55,7 @@
     dolphin-emu
     drawterm
     file
-    firefox
+    firefox-beta
     fuzzel
     ghostty
     protonup-qt
@@ -67,6 +67,7 @@
     #tlsclient
     unzip
     vscode
+    xcape
     xclip
     xsel
   ];

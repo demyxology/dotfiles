@@ -62,19 +62,30 @@ in
   hardware.nvidia.modesetting.enable = true;
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
-  services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.desktopManager.cinnamon.enable = true;
-  services.cinnamon.apps.enable = true;
-
-  #FIXME: gnome update forces this on for some reason?
-  systemd.user.services.orca.enable = false;
-
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
+  services.xserver = {
+    enable = true;
+    displayManager.lightdm.enable = true;
+    desktopManager.cinnamon = {
+      enable = true;
+    };
+    videoDrivers = [ "nvidia" ];
+    xkb = {
+      layout = "us";
+      variant = "";
+    };
   };
+
+  programs.dconf.profiles.user.databases = [
+    {
+      settings = {
+	"org/cinnamon/desktop/input-sources" = {
+	  xkb-options = [ "ctrl:nocaps" ];
+	};
+      };
+    }
+  ];
+
+  services.cinnamon.apps.enable = true;
 
   # Enable the gnome-keyring secrets vault.
   # Will be exposed through DBus to programs willing to store secrets.
@@ -84,7 +95,6 @@ in
   # hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
   hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
   hardware.nvidia.open = false;
-  services.xserver.videoDrivers = [ "nvidia" ];
 
   # Enable OpenGL
   hardware.graphics = {
@@ -145,7 +155,7 @@ in
   ];
 
   environment.shellAliases = {
-    update = "nix flake update --flake ~/nix/.; sudo nixos-rebuild switch --flake ~/nix/. --upgrade";
+    update = "nix flake update --flake ~/nix/.; sudo nixos-rebuild switch --flake ~/nix/.";
     gridup = "rlwrap ~/9pro/9gc nikita";
   };
 
@@ -168,6 +178,18 @@ in
   };
 
   # List services that you want to enable:
+
+  systemd.user.services.xcape = {
+    description = "xcape - Caps Lock as Escape when tapped";
+    wantedBy = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
+    serviceConfig = {
+      Type = "forking";
+      ExecStart = "${pkgs.xcape}/bin/xcape -e 'Control_L=Escape' -t 100";
+      Restart = "always";
+      RestartSec = 3;
+    };
+  }; 
 
   # Enable the OpenSSH daemon.
   services.openssh = {
