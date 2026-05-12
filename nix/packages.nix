@@ -55,7 +55,6 @@
     dolphin-emu
     drawterm
     file
-    firefox-beta
     fuzzel
     ghostty
     protonup-qt

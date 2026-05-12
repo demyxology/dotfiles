@@ -7,6 +7,7 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
     mac-app-util.url = "github:hraban/mac-app-util"; # fix mac gui apps
+    home-manager.url = "github:nix-community/home-manager";
   };
 
   outputs =
@@ -15,7 +16,8 @@
       nix-darwin,
       nixpkgs,
       nix-homebrew,
-      mac-app-util
+      mac-app-util,
+      home-manager
     }:
     let
       mkSystem =
@@ -56,6 +58,13 @@
             modules = [
               ./common.nix
               configuration
+              home-manager.nixosModules.home-manager
+              {
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                home-manager.extraSpecialArgs = { inherit inputs; };
+                home-manager.users.nikita = ./home.nix;
+              }
             ];
           };
     in

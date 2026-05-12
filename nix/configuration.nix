@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   commonPkgs = import ./packages.nix { inherit pkgs; };
@@ -59,8 +59,6 @@ in
     LC_TIME = "en_US.UTF-8";
   };
 
-  hardware.nvidia.modesetting.enable = true;
-
   # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
@@ -78,14 +76,20 @@ in
   programs.dconf.profiles.user.databases = [
     {
       settings = {
-	"org/cinnamon/desktop/input-sources" = {
-	  xkb-options = [ "ctrl:nocaps" ];
-	};
+  "org/cinnamon/desktop/input-sources" = {
+    xkb-options = [ "ctrl:nocaps" ];
+  };
       };
     }
   ];
 
   services.cinnamon.apps.enable = true;
+
+  # programs.hyprland = {
+  #   enable = true;
+  #   withUWSM = true; # recommended for most users
+  #   xwayland.enable = true; # Xwayland can be disabled.
+  # };
 
   # Enable the gnome-keyring secrets vault.
   # Will be exposed through DBus to programs willing to store secrets.
@@ -93,8 +97,12 @@ in
 
   # NVIDIA graphics
   # hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
-  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
-  hardware.nvidia.open = false;
+  hardware.nvidia = {
+    modesetting.enable = true;
+    open = false;
+    package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
+    nvidiaSettings = true;
+  };
 
   # Enable OpenGL
   hardware.graphics = {
@@ -147,6 +155,14 @@ in
     systemPackages = commonPkgs.commonPackages ++ commonPkgs.nixosPackages;
     variables = {
       TERMINAL = "ghostty";
+      LIBVA_DRIVER_NAME = "nvidia";
+      MOZ_DISABLE_RDD_SANDBOX = "1";
+      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      NVD_BACKEND = "direct";
+    };
+    shellAliases = {
+      update = "nix flake update --flake ~/nix/.; sudo nixos-rebuild switch --flake ~/nix/.";
+      gridup = "rlwrap ~/9pro/9gc nikita";
     };
   };
 
@@ -154,13 +170,24 @@ in
     noto-fonts-color-emoji
   ];
 
-  environment.shellAliases = {
-    update = "nix flake update --flake ~/nix/.; sudo nixos-rebuild switch --flake ~/nix/.";
-    gridup = "rlwrap ~/9pro/9gc nikita";
-  };
-
   # Use latest nix binary
   nix.package = pkgs.nixVersions.latest;
+
+  # XXX: idk if this works....
+  programs.firefox = {
+    enable = true;
+    preferences = {
+      "media.ffmpeg.vaapi.enabled" = true;
+      "media.hardware-video-decoding.force-enabled" = true;
+      "media.rdd-ffmpeg.enabled" = true;
+
+      "gfx.x11-egl.force-enabled" = true;
+      "widget.dmabuf.force-enabled" = true;
+
+      # GTX 30+ series required :C
+      "media.av1.enabled" = false;
+    };
+  };
 
   programs.steam = {
     enable = true;
@@ -189,13 +216,13 @@ in
       Restart = "always";
       RestartSec = 3;
     };
-  }; 
+  };
 
   # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;
     settings = {
-      PasswordAuthentication = true;
+      PasswordAuthentication = false;
       AllowUsers = [ "nikita" ];
       PermitRootLogin = "no";
     };
