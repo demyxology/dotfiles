@@ -8,6 +8,7 @@
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
     mac-app-util.url = "github:hraban/mac-app-util"; # fix mac gui apps
     home-manager.url = "github:nix-community/home-manager";
+    lazyvim.url = "github:pfassina/lazyvim-nix";
   };
 
   outputs =
@@ -17,7 +18,8 @@
       nixpkgs,
       nix-homebrew,
       mac-app-util,
-      home-manager
+      home-manager,
+      lazyvim
     }:
     let
       mkSystem =
