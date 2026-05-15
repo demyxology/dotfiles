@@ -8,17 +8,17 @@
   #                      else "/Users/nikita/";
 
   imports = [ inputs.lazyvim.homeManagerModules.default ];
-  programs.lazyvim.enable = {
+  programs.lazyvim = {
     enable = true;
 
     extras.lang = {
       nix.enable = true;
     };
 
-    extraPackages = with pkgs; [
-      nixd       # Nix LSP
-      alejandra  # Nix formatter
-    ];
+  #   extraPackages = with pkgs; [
+  #     nixd       # Nix LSP
+  #     alejandra  # Nix formatter
+  #   ];
   };
 
   # This value determines the Home Manager release that your
