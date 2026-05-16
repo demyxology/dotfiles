@@ -3,10 +3,10 @@
 { config, pkgs }:
 
 pkgs.stdenv.mkDerivation {
-  pname = "berkeley-mono-typeface";
+  pname = "berkeley-mono";
   version = "1.009";
 
-  src = ./berkeley-mono-typeface.zip;
+  src = ./berkeley-mono.zip;
   dst = if pkgs.system  == "aarch64-darwin" then "/Users/nikita/Library/fonts"
         else "/home/nikita/.local/share/fonts";
 
@@ -20,7 +20,7 @@ pkgs.stdenv.mkDerivation {
   installPhase = ''
     runHook preInstall
 
-    install -Dm644 berkeley-mono-typeface/*.ttf -t $dst
+    install -Dm644 berkeley-mono/*.ttf -t $dst
 
     runHook postInstall
   '';

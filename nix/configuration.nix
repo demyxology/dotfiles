@@ -6,7 +6,7 @@
 
 let
   commonPkgs = import ./packages.nix { inherit pkgs; };
-  berkeley-mono-typeface = import ./packages/berkeley-mono-typeface { inherit config pkgs; };
+  berkeley-mono = import ./berkeley-mono.nix { inherit config pkgs; };
 in
 {
   imports = [
@@ -169,7 +169,7 @@ in
 
   fonts.packages = with pkgs; [
     noto-fonts-color-emoji
-    berkeley-mono-typeface
+    berkeley-mono
   ];
 
   # Use latest nix binary
