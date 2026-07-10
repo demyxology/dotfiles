@@ -1,4 +1,9 @@
-{ config, pkgs, inputs, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
 
 {
   # Home Manager needs a bit of information about you and the
@@ -15,10 +20,10 @@
       nix.enable = true;
     };
 
-  #   extraPackages = with pkgs; [
-  #     nixd       # Nix LSP
-  #     alejandra  # Nix formatter
-  #   ];
+    #   extraPackages = with pkgs; [
+    #     nixd       # Nix LSP
+    #     alejandra  # Nix formatter
+    #   ];
   };
 
   # This value determines the Home Manager release that your

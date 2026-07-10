@@ -2,11 +2,16 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   commonPkgs = import ./packages.nix { inherit pkgs; };
-  berkeley-mono = import ./berkeley-mono.nix { inherit config pkgs; };
+  berkeley-mono = import ./berkeley-mono.nix { inherit pkgs; };
 in
 {
   imports = [
@@ -20,7 +25,9 @@ in
     loader.efi.canTouchEfiVariables = true;
     kernelPackages = pkgs.linuxPackages_latest;
     kernelModules = [ "ntsync" ];
-    initrd.kernelModules = [ "nvidia" ];
+    kernelParams = [
+      "mitigations=off"
+    ];
   };
 
   fileSystems."/".options = [ "noatime" ];
@@ -67,7 +74,6 @@ in
     desktopManager.cinnamon = {
       enable = true;
     };
-    videoDrivers = [ "nvidia" ];
     xkb = {
       layout = "us";
       variant = "";
@@ -77,9 +83,9 @@ in
   programs.dconf.profiles.user.databases = [
     {
       settings = {
-  "org/cinnamon/desktop/input-sources" = {
-    xkb-options = [ "ctrl:nocaps" ];
-  };
+        "org/cinnamon/desktop/input-sources" = {
+          xkb-options = [ "ctrl:nocaps" ];
+        };
       };
     }
   ];
@@ -96,18 +102,10 @@ in
   # Will be exposed through DBus to programs willing to store secrets.
   services.gnome.gnome-keyring.enable = true;
 
-  # NVIDIA graphics
-  # hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
-  hardware.nvidia = {
-    modesetting.enable = true;
-    open = false;
-    package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
-    nvidiaSettings = true;
-  };
-
   # Enable OpenGL
   hardware.graphics = {
     enable = true;
+    enable32Bit = true;
   };
 
   # Enable CUPS to print documents.
@@ -156,10 +154,6 @@ in
     systemPackages = commonPkgs.commonPackages ++ commonPkgs.nixosPackages;
     variables = {
       TERMINAL = "ghostty";
-      LIBVA_DRIVER_NAME = "nvidia";
-      MOZ_DISABLE_RDD_SANDBOX = "1";
-      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-      NVD_BACKEND = "direct";
     };
     shellAliases = {
       update = "nix flake update --flake ~/nix/.; sudo nixos-rebuild switch --flake ~/nix/.";
@@ -167,29 +161,26 @@ in
     };
   };
 
-  fonts.packages = with pkgs; [
-    noto-fonts-color-emoji
-    berkeley-mono
-  ];
+  fonts = {
+    fontDir.enable = true;
+    packages = with pkgs; [
+      noto-fonts-color-emoji
+      # berkeley-mono
+      (berkeley-mono.overrideAttrs (o: {
+        nativeBuildInputs = [ pkgs.nerd-font-patcher ];
+        postInstall = ''
+          mkdir -p $out/share/fonts/truetype/{berkeley-mono,berkeley-mono-nerd}
+          mv $out/share/fonts/truetype/BerkeleyMono-*.ttf $out/share/fonts/truetype/berkeley-mono/
+          for f in $out/share/fonts/truetype/berkeley-mono/*.ttf; do
+            nerd-font-patcher --complete --outputdir $out/share/fonts/truetype/berkeley-mono-nerd/ $f
+          done
+        '';
+      }))
+    ];
+  };
 
   # Use latest nix binary
   nix.package = pkgs.nixVersions.latest;
-
-  # XXX: idk if this works....
-  programs.firefox = {
-    enable = true;
-    preferences = {
-      "media.ffmpeg.vaapi.enabled" = true;
-      "media.hardware-video-decoding.force-enabled" = true;
-      "media.rdd-ffmpeg.enabled" = true;
-
-      "gfx.x11-egl.force-enabled" = true;
-      "widget.dmabuf.force-enabled" = true;
-
-      # GTX 30+ series required :C
-      "media.av1.enabled" = false;
-    };
-  };
 
   programs.steam = {
     enable = true;
@@ -206,7 +197,14 @@ in
     enableSSHSupport = true;
   };
 
+  services.emacs = {
+    package = pkgs.emacs-gtk;
+    enable = true;
+  };
+
   # List services that you want to enable:
+  systemd.packages = with pkgs; [ lact ];
+  systemd.services.lactd.wantedBy = [ "multi-user.target" ];
 
   systemd.user.services.xcape = {
     description = "xcape - Caps Lock as Escape when tapped";
@@ -237,7 +235,7 @@ in
   # build takes forever & fails randomly
   # re-enable when u actually need it
   virtualisation.virtualbox.host = {
-    enable = true;
+    enable = false;
     enableKvm = true;
     addNetworkInterface = false;
   };

@@ -2,6 +2,7 @@
 
 {
   commonPackages = with pkgs; [
+    alacritty
     atuin
     bat
     btop
@@ -11,12 +12,15 @@
     emacs
     fd
     findutils
+    fish
     fzf
     gcc
     git
     helix
     irssi
     kakoune
+    kitty
+    lmstudio
     llvmPackages.libcxxClang
     llvmPackages.clang-tools
     mc
@@ -25,6 +29,7 @@
     nixfmt
     nmap
     nodejs
+    nushell
     plan9port
     pure-prompt
     pv
@@ -36,6 +41,8 @@
     tmux
     tree
     vim
+    wezterm
+    xonsh
     zsh
     zsh-autosuggestions
     zsh-syntax-highlighting
@@ -50,15 +57,20 @@
   ];
 
   nixosPackages = with pkgs; [
-    _9pfs
+    # fails due to deprecated dependency on fuse2
+    # _9pfs
     ardour
     dolphin-emu
     drawterm
     file
+    firefox
     fuzzel
     ghostty
+    gnome-system-monitor
+    gnome-weather
+    lact
+    pciutils
     protonup-qt
-    rpcs3
     obs-studio
     qbittorrent
     signal-desktop
@@ -66,6 +78,7 @@
     #tlsclient
     unzip
     vscode
+    vulkan-tools
     xcape
     xclip
     xsel

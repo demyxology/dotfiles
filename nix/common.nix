@@ -12,22 +12,17 @@
     '';
   };
 
-  services.emacs = {
-    enable = true;
-  };
-
   environment.shellAliases = {
     ll = "ls -l";
     e = "nvim";
   };
 
   nix = {
-    gc.automatic = true;
-    optimise.automatic = true;
     settings.experimental-features = [
       "nix-command"
       "flakes"
     ];
+
   };
 
   nixpkgs.config = {
@@ -37,6 +32,7 @@
   environment = {
     variables = {
       EDITOR = "nvim";
+      NIX_AUTO_RUN_INTERACTIVE = 1;
     };
     shells = with pkgs; [ zsh ];
   };

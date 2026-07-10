@@ -26,10 +26,10 @@
 (save-place-mode 1)
 (global-auto-revert-mode t)
 (setq-default indent-tabs-mode nil)
-(setq-default tab-width 4)
+(setq-default tab-width 2)
 (delete-selection-mode 1)
 (blink-cursor-mode -1)
-(set-frame-font "Berkeley Mono-14" nil t)
+(set-frame-font "Berkeley Mono Nerd Font-14" nil t)
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
@@ -165,6 +165,7 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+(use-package pretty-sha-path)
 (use-package vundo
   :defer t
   :custom
@@ -304,3 +305,10 @@
 
 (global-set-key [wheel-up] 'my-mouse-wheel-scroll)
 (global-set-key [wheel-down] 'my-mouse-wheel-scroll)
+
+(defun describe-package-at-point ()
+  `Run 'describe-package' on the space-delimited string under the point.'
+  (interactive)
+  (describe-package (thing-at-point 'word)))
+
+(keymap-local-set "C-h C-p" (lambda () (interactive) (describe-package (intern (thing-at-point 'symbol)))))
