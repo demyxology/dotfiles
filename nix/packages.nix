@@ -7,7 +7,6 @@
     bat
     btop
     cmake
-    discord
     dust
     emacs
     fd
@@ -60,6 +59,7 @@
     # fails due to deprecated dependency on fuse2
     # _9pfs
     ardour
+    discord
     dolphin-emu
     drawterm
     file

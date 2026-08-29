@@ -33,7 +33,7 @@
   environment = {
     variables = {
       EDITOR = "nvim";
-      NIX_AUTO_RUN_INTERACTIVE = 1;
+      NIX_AUTO_RUN_INTERACTIVE = "1";
     };
     shells = with pkgs; [ zsh ];
   };
