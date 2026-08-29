@@ -62,6 +62,7 @@
     discord
     dolphin-emu
     drawterm
+    emote
     file
     firefox
     fuzzel
