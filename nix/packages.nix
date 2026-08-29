@@ -69,11 +69,14 @@
     gnome-system-monitor
     gnome-weather
     lact
+    mangohud
+    pulseaudio
     pciutils
     protonup-qt
     obs-studio
     qbittorrent
     signal-desktop
+    steam
     # FIXME: package broken -- contact moody?
     #tlsclient
     unzip

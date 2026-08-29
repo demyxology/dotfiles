@@ -15,6 +15,7 @@
   environment.shellAliases = {
     ll = "ls -l";
     e = "nvim";
+    nix-installed = "nix-store -q --references /var/run/current-system/sw | cut -d'-' -f2-";
   };
 
   nix = {

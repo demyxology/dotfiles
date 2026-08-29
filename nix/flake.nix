@@ -19,7 +19,7 @@
       nix-homebrew,
       mac-app-util,
       home-manager,
-      lazyvim
+      lazyvim,
     }:
     let
       mkSystem =

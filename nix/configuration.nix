@@ -25,19 +25,17 @@ in
     loader.efi.canTouchEfiVariables = true;
     kernelPackages = pkgs.linuxPackages_latest;
     kernelModules = [ "ntsync" ];
-    kernelParams = [
-      "mitigations=off"
-    ];
   };
 
   fileSystems."/".options = [ "noatime" ];
 
   services.udev.extraRules = ''
-    KERNEL=="ntsync", MODE="0660", TAG+="uaccess"
-    SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="0337", MODE="0666"
+    KERNEL=="ntsync", MODE="0660", GROUP="ntsync"
   '';
+  #SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="0337", MODE="0666"
+  #  '';
 
-  powerManagement.cpuFreqGovernor = "performance";
+  # powerManagement.cpuFreqGovernor = "performance";
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -90,6 +88,18 @@ in
     }
   ];
 
+  systemd.user.services.xcape = {
+    description = "xcape - Caps Lock as Escape when tapped";
+    wantedBy = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
+    serviceConfig = {
+      Type = "forking";
+      ExecStart = "${pkgs.xcape}/bin/xcape -e 'Control_L=Escape' -t 100";
+      Restart = "always";
+      RestartSec = 3;
+    };
+  };
+
   services.cinnamon.apps.enable = true;
 
   # programs.hyprland = {
@@ -107,6 +117,8 @@ in
     enable = true;
     enable32Bit = true;
   };
+
+  hardware.amdgpu.overdrive.enable = true;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -141,12 +153,14 @@ in
     extraGroups = [
       "networkmanager"
       "wheel"
+      "ntsync"
     ];
     shell = pkgs.zsh;
     packages = with pkgs; [
       #  thunderbird
     ];
   };
+  users.groups.ntsync = { };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -182,12 +196,12 @@ in
   # Use latest nix binary
   nix.package = pkgs.nixVersions.latest;
 
-  programs.steam = {
-    enable = true;
-    gamescopeSession.enable = true;
-    # doesnt work for some reason, using protonup instead
-    # extraCompatPackages = [ pkgs.proton-ge-bin ];
-  };
+  #programs.steam = {
+  #enable = true;
+  # gamescopeSession.enable = true;
+  # doesnt work for some reason, using protonup instead
+  # extraCompatPackages = [ pkgs.proton-ge-bin ];
+  #};
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -205,18 +219,6 @@ in
   # List services that you want to enable:
   systemd.packages = with pkgs; [ lact ];
   systemd.services.lactd.wantedBy = [ "multi-user.target" ];
-
-  systemd.user.services.xcape = {
-    description = "xcape - Caps Lock as Escape when tapped";
-    wantedBy = [ "graphical-session.target" ];
-    partOf = [ "graphical-session.target" ];
-    serviceConfig = {
-      Type = "forking";
-      ExecStart = "${pkgs.xcape}/bin/xcape -e 'Control_L=Escape' -t 100";
-      Restart = "always";
-      RestartSec = 3;
-    };
-  };
 
   # Enable the OpenSSH daemon.
   services.openssh = {
