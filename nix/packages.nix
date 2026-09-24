@@ -41,6 +41,7 @@
     tree
     vim
     wezterm
+    wget
     xonsh
     zsh
     zsh-autosuggestions
@@ -70,6 +71,7 @@
     gnome-system-monitor
     gnome-weather
     lact
+    libreoffice
     mangohud
     pulseaudio
     pciutils

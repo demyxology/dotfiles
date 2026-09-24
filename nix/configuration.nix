@@ -190,6 +190,7 @@ in
           done
         '';
       }))
+      open-sans
     ];
   };
 
