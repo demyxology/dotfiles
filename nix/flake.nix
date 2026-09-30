@@ -6,7 +6,13 @@
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
-    mac-app-util.url = "github:hraban/mac-app-util"; # fix mac gui apps
+    # fix mac gui apps
+    # fix "failed to allocate bug" - https://amreis.github.io/misc/2026/09/15/macos27-nix-darwin.html
+    # XXX: remove this when no longer necessary
+    mac-app-util = {
+      url = "github:hraban/mac-app-util";
+      inputs.nixpkgs.follows = "nixpkgs";  # temporarily override nixpkgs url to get SBCL v2.6.6
+    };
     home-manager.url = "github:nix-community/home-manager";
     lazyvim.url = "github:pfassina/lazyvim-nix";
   };

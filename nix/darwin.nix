@@ -58,7 +58,8 @@ in
 
   security.pam.services.sudo_local.touchIdAuth = true;
 
-  nix.linux-builder.enable = true;
+  # not sure if i ever use this
+  # nix.linux-builder.enable = true;
 
   documentation.man.enable = true;
 
