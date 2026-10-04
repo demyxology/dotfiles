@@ -118,7 +118,10 @@ in
     enable32Bit = true;
   };
 
-  hardware.amdgpu.overdrive.enable = true;
+  hardware.amdgpu = {
+    overdrive.enable = true;
+    initrd.enable = true;
+  };
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
