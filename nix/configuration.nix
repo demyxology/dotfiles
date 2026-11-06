@@ -11,7 +11,6 @@
 
 let
   commonPkgs = import ./packages.nix { inherit pkgs; };
-  berkeley-mono = import ./berkeley-mono.nix { inherit pkgs; };
 in
 {
   imports = [
@@ -182,17 +181,6 @@ in
     fontDir.enable = true;
     packages = with pkgs; [
       noto-fonts-color-emoji
-      # berkeley-mono
-      (berkeley-mono.overrideAttrs (o: {
-        nativeBuildInputs = [ pkgs.nerd-font-patcher ];
-        postInstall = ''
-          mkdir -p $out/share/fonts/truetype/{berkeley-mono,berkeley-mono-nerd}
-          mv $out/share/fonts/truetype/BerkeleyMono-*.ttf $out/share/fonts/truetype/berkeley-mono/
-          for f in $out/share/fonts/truetype/berkeley-mono/*.ttf; do
-            nerd-font-patcher --complete --outputdir $out/share/fonts/truetype/berkeley-mono-nerd/ $f
-          done
-        '';
-      }))
       open-sans
     ];
   };

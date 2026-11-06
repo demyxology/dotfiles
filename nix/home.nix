@@ -12,6 +12,11 @@
   # home.homeDirectory = if pkgs.stdenv.isLinux then "/home/nikita/"
   #                      else "/Users/nikita/";
 
+  home.file = {
+    ".emacs".source = ./emacs/.emacs;
+    ".emacs.d/acme-mouse.el".source = ./emacs/acme-mouse.el;
+  };
+
   imports = [ inputs.lazyvim.homeManagerModules.default ];
   programs.lazyvim = {
     enable = true;

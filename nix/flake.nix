@@ -38,6 +38,13 @@
               configuration
               nix-homebrew.darwinModules.nix-homebrew
               mac-app-util.darwinModules.default
+              home-manager.darwinModules.home-manager
+              {
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                home-manager.extraSpecialArgs = { inherit inputs; };
+                home-manager.users.nikita = ./home.nix;
+              }
               {
                 nix-homebrew = {
                   enable = true;

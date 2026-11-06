@@ -7,6 +7,7 @@ in
   environment.systemPackages = commonPkgs.commonPackages ++ commonPkgs.darwinPackages;
 
   system.primaryUser = "nikita";
+  users.users.nikita.home = "/Users/nikita";
 
   #XXX want to move this to common but nixos doesnt share these?
   programs.zsh = {

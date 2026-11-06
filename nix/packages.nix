@@ -3,10 +3,11 @@
 {
   commonPackages = with pkgs; [
     alacritty
-    atuin
+    # atuin # build failure & never use it
     bat
     btop
     cmake
+    codex
     dust
     emacs
     fd
@@ -29,6 +30,8 @@
     nmap
     nodejs
     nushell
+    omp
+    pi-coding-agent
     plan9port
     pure-prompt
     pv
@@ -43,6 +46,7 @@
     wezterm
     wget
     xonsh
+    zed-editor
     zsh
     zsh-autosuggestions
     zsh-syntax-highlighting

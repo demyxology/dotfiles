@@ -18,7 +18,8 @@ pkgs.stdenv.mkDerivation {
   installPhase = ''
     runHook preInstall
 
-    install -Dm644 berkeley-mono/TTF/*.ttf -t $out/share/fonts/truetype
+    mkdir -p "$out/share/fonts/truetype"
+    install -m644 berkeley-mono/TTF/*.ttf "$out/share/fonts/truetype/"
 
     runHook postInstall
   '';
