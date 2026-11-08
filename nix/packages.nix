@@ -6,6 +6,7 @@
     # atuin # build failure & never use it
     bat
     btop
+    chatgpt
     cmake
     codex
     dust
@@ -24,7 +25,7 @@
     llvmPackages.libcxxClang
     llvmPackages.clang-tools
     mc
-    neovide
+    # neovide
     neovim
     nixfmt
     nmap
@@ -35,6 +36,7 @@
     plan9port
     pure-prompt
     pv
+    python3
     qemu
     ripgrep
     rlwrap
