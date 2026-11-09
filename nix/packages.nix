@@ -1,14 +1,13 @@
 { pkgs, ... }:
 
 {
+
   commonPackages = with pkgs; [
     alacritty
-    # atuin # build failure & never use it
     bat
     btop
-    chatgpt
+    # chatgpt
     cmake
-    codex
     dust
     emacs
     fd
@@ -25,7 +24,7 @@
     llvmPackages.libcxxClang
     llvmPackages.clang-tools
     mc
-    # neovide
+    neovide
     neovim
     nixfmt
     nmap

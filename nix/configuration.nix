@@ -164,6 +164,17 @@ in
   };
   users.groups.ntsync = { };
 
+  # XXX: temp workaround for omp until upstream tectonic is fixed
+    nixpkgs.overlays = [
+    (final: prev: {
+      omp = prev.omp.overrideAttrs (old: {
+        buildInputs = (old.buildInputs or [ ]) ++ [
+          final.zstd
+          final.oniguruma
+        ];
+      });
+    })
+  ];
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment = {
