@@ -6,7 +6,6 @@
     alacritty
     bat
     btop
-    chatgpt
     cmake
     dust
     emacs
@@ -54,6 +53,7 @@
   ];
 
   darwinPackages = with pkgs; [
+    chatgpt
     coreutils-prefixed
     ghostty-bin
     iterm2
