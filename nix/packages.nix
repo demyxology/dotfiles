@@ -6,7 +6,7 @@
     alacritty
     bat
     btop
-    # chatgpt
+    chatgpt
     cmake
     dust
     emacs
@@ -47,7 +47,7 @@
     wezterm
     wget
     xonsh
-    zed-editor
+    # zed-editor
     zsh
     zsh-autosuggestions
     zsh-syntax-highlighting

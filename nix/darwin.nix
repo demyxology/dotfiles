@@ -4,6 +4,17 @@ let
   commonPkgs = import ./packages.nix { inherit pkgs; };
 in
 {
+  # XXX: temp workaround for omp until upstream tectonic is fixed
+  nixpkgs.overlays = [
+    (final: prev: {
+      omp = prev.omp.overrideAttrs (old: {
+        buildInputs = (old.buildInputs or [ ]) ++ [
+          final.zstd
+          final.oniguruma
+        ];
+      });
+    })
+  ];
   environment.systemPackages = commonPkgs.commonPackages ++ commonPkgs.darwinPackages;
 
   system.primaryUser = "nikita";
@@ -27,7 +38,7 @@ in
     taps = [ ];
     brews = [ ];
     #XXX: some nix packages misbehave on macos. check in on them to see if theyre fixed
-    casks = [ 
+    casks = [
       "appcleaner" # installs but literally doesnt appear??
       "discord" # fails to open as "corrupted"
       "dolphin" # fails to build
@@ -39,10 +50,10 @@ in
     ];
     # slow asf when updating, even if there isnt a new version
     /*
-    masApps = {
-      "Messenger" = 454638411;
-      "WhatsApp" = 310633997;
-    };
+      masApps = {
+        "Messenger" = 454638411;
+        "WhatsApp" = 310633997;
+      };
     */
   };
 
