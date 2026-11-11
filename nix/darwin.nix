@@ -47,6 +47,7 @@ in
       "steam" # no nix-darwin candidate
       "transmission" # gui not on nixpkgs
       "visual-studio-code" # fails to build
+      "zed" 
     ];
     # slow asf when updating, even if there isnt a new version
     /*

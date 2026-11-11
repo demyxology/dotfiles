@@ -40,13 +40,13 @@
     rlwrap
     spotify
     tldr
+    tlsclient
     tmux
     tree
     vim
     wezterm
     wget
     xonsh
-    # zed-editor
     zsh
     zsh-autosuggestions
     zsh-syntax-highlighting
@@ -85,13 +85,12 @@
     qbittorrent
     signal-desktop
     steam
-    # FIXME: package broken -- contact moody?
-    #tlsclient
     unzip
     vscode
     vulkan-tools
     xcape
     xclip
     xsel
+    zed-editor
   ];
 }
