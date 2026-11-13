@@ -8,6 +8,7 @@
     btop
     cmake
     dust
+    drawterm
     emacs
     fd
     findutils
