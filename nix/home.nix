@@ -117,8 +117,7 @@
       shfmt
       statix
       stylua
-      # XXX: uncomment when upstreams fixed
-      # tectonic
+      tectonic
       tree-sitter
     ];
   };

@@ -4,17 +4,6 @@ let
   commonPkgs = import ./packages.nix { inherit pkgs; };
 in
 {
-  # XXX: temp workaround for omp until upstream tectonic is fixed
-  nixpkgs.overlays = [
-    (final: prev: {
-      omp = prev.omp.overrideAttrs (old: {
-        buildInputs = (old.buildInputs or [ ]) ++ [
-          final.zstd
-          final.oniguruma
-        ];
-      });
-    })
-  ];
   environment.systemPackages = commonPkgs.commonPackages ++ commonPkgs.darwinPackages;
 
   system.primaryUser = "nikita";

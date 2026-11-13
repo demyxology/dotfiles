@@ -1,11 +1,11 @@
 { pkgs, ... }:
 
 {
-
   commonPackages = with pkgs; [
     alacritty
     bat
     btop
+    chatgpt
     cmake
     dust
     drawterm
@@ -54,7 +54,6 @@
   ];
 
   darwinPackages = with pkgs; [
-    chatgpt
     coreutils-prefixed
     ghostty-bin
     iterm2
