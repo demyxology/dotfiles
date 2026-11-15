@@ -28,23 +28,10 @@ in
     brews = [ ];
     #XXX: some nix packages misbehave on macos. check in on them to see if theyre fixed
     casks = [
-      "appcleaner" # installs but literally doesnt appear??
-      "discord" # fails to open as "corrupted"
       "dolphin" # fails to build
       "firefox" # crashes on signin, firefox-bin doesnt launch
-      "signal" # base app fails to build, bin version is woefully out of date
       "steam" # no nix-darwin candidate
-      "transmission" # gui not on nixpkgs
-      "visual-studio-code" # fails to build
-      "zed" 
     ];
-    # slow asf when updating, even if there isnt a new version
-    /*
-      masApps = {
-        "Messenger" = 454638411;
-        "WhatsApp" = 310633997;
-      };
-    */
   };
 
   system.defaults = {

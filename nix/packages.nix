@@ -7,15 +7,18 @@
     btop
     chatgpt
     cmake
+    discord
     dust
     drawterm
     emacs
     fd
+    file
     findutils
     fish
     fzf
     gcc
     git
+    gnumake
     helix
     irssi
     kakoune
@@ -23,10 +26,10 @@
     lmstudio
     llvmPackages.libcxxClang
     llvmPackages.clang-tools
-    mc
     neovide
     neovim
     nixfmt
+    nix-output-monitor
     nmap
     nodejs
     nushell
@@ -36,24 +39,29 @@
     pure-prompt
     pv
     python3
+    qbittorrent
     qemu
     ripgrep
     rlwrap
+    signal-desktop
     spotify
     tldr
     tlsclient
     tmux
     tree
     vim
+    vscode
     wezterm
     wget
     xonsh
+    zed-editor
     zsh
     zsh-autosuggestions
     zsh-syntax-highlighting
   ];
 
   darwinPackages = with pkgs; [
+    appcleaner
     coreutils-prefixed
     ghostty-bin
     iterm2
@@ -67,9 +75,7 @@
     ardour
     discord
     dolphin-emu
-    drawterm
     emote
-    file
     firefox
     fuzzel
     ghostty
@@ -82,15 +88,11 @@
     pciutils
     protonup-qt
     obs-studio
-    qbittorrent
-    signal-desktop
     steam
     unzip
-    vscode
     vulkan-tools
     xcape
     xclip
     xsel
-    zed-editor
   ];
 }

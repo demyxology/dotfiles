@@ -13,7 +13,13 @@
     };
   };
 
-  imports = [ inputs.lazyvim.homeManagerModules.default ];
+  imports = [ 
+    inputs.lazyvim.homeManagerModules.default
+    ./modules/nixpkgs-suggest.nix
+  ];
+
+  services.nixpkgsFirefoxSuggest.enable = true;
+
   programs.lazyvim = {
     enable = true;
 
