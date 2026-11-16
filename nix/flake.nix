@@ -14,7 +14,12 @@
       inputs.nixpkgs.follows = "nixpkgs";  # temporarily override nixpkgs url to get SBCL v2.6.6
     };
     home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
     lazyvim.url = "github:pfassina/lazyvim-nix";
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -26,6 +31,7 @@
       mac-app-util,
       home-manager,
       lazyvim,
+      ...
     }:
     let
       mkSystem =
@@ -88,7 +94,6 @@
 
       nixosConfigurations.nixos = mkSystem "nixos" {
         imports = [
-          ./hardware-configuration.nix
           ./configuration.nix
         ];
       };

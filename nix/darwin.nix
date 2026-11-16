@@ -9,13 +9,6 @@ in
   system.primaryUser = "nikita";
   users.users.nikita.home = "/Users/nikita";
 
-  #XXX want to move this to common but nixos doesnt share these?
-  programs.zsh = {
-    enableFzfCompletion = true;
-    enableFzfGit = true;
-    enableFzfHistory = true;
-  };
-
   environment.shellAliases = {
     update = "nix flake update --flake ~/nix/; sudo darwin-rebuild switch --flake ~/nix";
   };
@@ -43,12 +36,7 @@ in
     };
   };
 
-  nixpkgs.config.allowUnsupportedSystem = true;
-
   security.pam.services.sudo_local.touchIdAuth = true;
-
-  # not sure if i ever use this
-  # nix.linux-builder.enable = true;
 
   documentation.man.enable = true;
 

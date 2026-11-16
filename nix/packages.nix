@@ -15,7 +15,6 @@
     file
     findutils
     fish
-    fzf
     gcc
     git
     gnumake
@@ -27,7 +26,6 @@
     llvmPackages.libcxxClang
     llvmPackages.clang-tools
     neovide
-    neovim
     nixfmt
     nix-output-monitor
     nmap
@@ -36,7 +34,6 @@
     omp
     pi-coding-agent
     plan9port
-    pure-prompt
     pv
     python3
     qbittorrent
@@ -55,9 +52,6 @@
     wget
     xonsh
     zed-editor
-    zsh
-    zsh-autosuggestions
-    zsh-syntax-highlighting
   ];
 
   darwinPackages = with pkgs; [
@@ -73,7 +67,6 @@
     # fails due to deprecated dependency on fuse2
     # _9pfs
     ardour
-    discord
     dolphin-emu
     emote
     firefox
@@ -81,14 +74,12 @@
     ghostty
     gnome-system-monitor
     gnome-weather
-    lact
     libreoffice
     mangohud
     pulseaudio
     pciutils
     protonup-qt
     obs-studio
-    steam
     unzip
     vulkan-tools
     xcape

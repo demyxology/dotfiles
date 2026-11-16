@@ -8,6 +8,8 @@ pkgs.stdenv.mkDerivation {
 
   src = ./berkeley-mono.zip;
 
+  nativeBuildInputs = [ pkgs.nerd-font-patcher ];
+
   unpackPhase = ''
     runHook preUnpack
     ${pkgs.unzip}/bin/unzip $src
@@ -22,5 +24,13 @@ pkgs.stdenv.mkDerivation {
     install -m644 berkeley-mono/TTF/*.ttf "$out/share/fonts/truetype/"
 
     runHook postInstall
+  '';
+
+  postInstall = ''
+    mkdir -p "$out/share/fonts/truetype/berkeley-mono" "$out/share/fonts/truetype/berkeley-mono-nerd"
+    mv "$out"/share/fonts/truetype/BerkeleyMono-*.ttf "$out/share/fonts/truetype/berkeley-mono/"
+    for f in "$out"/share/fonts/truetype/berkeley-mono/*.ttf; do
+      nerd-font-patcher --complete --outputdir "$out/share/fonts/truetype/berkeley-mono-nerd/" "$f"
+    done
   '';
 }

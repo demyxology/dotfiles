@@ -1,4 +1,6 @@
 {
+  config,
+  lib,
   pkgs,
   inputs,
   ...
@@ -15,12 +17,52 @@
 
   imports = [ 
     inputs.lazyvim.homeManagerModules.default
+    inputs.nix-index-database.homeModules.default
     ./modules/nixpkgs-suggest.nix
   ];
 
   services.nixpkgsFirefoxSuggest.enable = true;
 
-  programs.lazyvim = {
+  home.packages = [ pkgs.pure-prompt ];
+
+  programs = {
+    zsh = {
+    enable = true;
+    dotDir = config.home.homeDirectory;
+    enableCompletion = true;
+    autosuggestion.enable = true;
+    syntaxHighlighting.enable = true;
+    shellAliases = {
+      e = "nvim";
+    };
+    # profileExtra = lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
+    #   eval "$(/opt/homebrew/bin/brew shellenv)"
+    # '';
+    initContent = 
+      ''
+      # path=("$HOME/.config/emacs/bin" $path)
+      fpath=(${pkgs.pure-prompt}/share/zsh/site-functions $fpath)
+      autoload -U promptinit && promptinit
+      prompt pure
+    '';
+  };
+
+  fzf = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
+  command-not-found.enable = false;
+  nix-index = {
+    enable = true;
+    enableZshIntegration = true;
+    # Both wrapped tools use the store database; do not also link the full index.
+    symlinkToCacheHome = false;
+    package = inputs.nix-index-database.packages.${pkgs.stdenv.hostPlatform.system}.nix-index-with-small-db;
+  };
+  nix-index-database.comma.enable = true;
+
+  lazyvim = {
     enable = true;
 
     extras.lang = {
@@ -43,7 +85,7 @@
             },
             picker = {
               db = {
-                sqlite3_path = "${pkgs.lib.getLib pkgs.sqlite}/lib/libsqlite3.so",
+                sqlite3_path = "${pkgs.lib.getLib pkgs.sqlite}/lib/libsqlite3${pkgs.stdenv.hostPlatform.extensions.sharedLibrary}",
               },
             },
           },
@@ -64,6 +106,7 @@
                       flake = {
                         autoArchive = true,
                         autoEvalInputs = true,
+                        nixpkgsInputName = true,
                       },
                     },
                   },
@@ -126,6 +169,7 @@
       tectonic
       tree-sitter
     ];
+  };
   };
 
   # This value determines the Home Manager release that your

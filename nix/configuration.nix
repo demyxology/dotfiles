@@ -188,12 +188,8 @@ in
   # Use latest nix binary
   nix.package = pkgs.nixVersions.latest;
 
-  #programs.steam = {
-  #enable = true;
-  # gamescopeSession.enable = true;
-  # doesnt work for some reason, using protonup instead
-  # extraCompatPackages = [ pkgs.proton-ge-bin ];
-  #};
+  programs.steam.enable = true;
+  programs.command-not-found.enable = false;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -207,10 +203,6 @@ in
     package = pkgs.emacs-gtk;
     enable = true;
   };
-
-  # List services that you want to enable:
-  systemd.packages = with pkgs; [ lact ];
-  systemd.services.lactd.wantedBy = [ "multi-user.target" ];
 
   # Enable the OpenSSH daemon.
   services.openssh = {
