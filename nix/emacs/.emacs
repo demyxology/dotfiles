@@ -1,19 +1,16 @@
 ;;; ...  -*- lexical-binding: t -*-
-;; gc tuning for startup
+;; Startup and package setup (Emacs 29+).
 (setq-default gc-cons-threshold (* 32 1024 1024))
 (setq-default gc-cons-percentage 0.5)
 (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 800000) (setq-default gc-cons-percentage 0.1)))
 
-
-;; mepla
 (require 'package)
 (setq package-enable-at-startup nil)
 (package-initialize)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(unless package-archive-contents
-  (package-refresh-contents))
+(require 'use-package)
 
-;; config
+;; Core editing and display.
 (setq inhibit-startup-message t)
 (setq ring-bell-function 'ignore)
 (tool-bar-mode -1)
@@ -29,7 +26,7 @@
 (setq-default tab-width 2)
 (delete-selection-mode 1)
 (blink-cursor-mode -1)
-(set-frame-font "Berkeley Mono Nerd Font-14" nil t)
+(set-frame-font "BerkeleyMono Nerd Font-14" nil t)
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
@@ -41,30 +38,15 @@
 (unless (assoc "xterm-ghostty" term-file-aliases)
   (add-to-list 'term-file-aliases '("xterm-ghostty" . "xterm-256color")))
 (electric-pair-mode 1)
-(add-hook 'before-save-hook 'whitespace-cleanup)
-(setq-default bidi-display-reordering 'left-to-right
+(setq-default bidi-display-reordering t
               bidi-paragraph-direction 'left-to-right
               bidi-inhibit-bpa t)
 (setq fast-but-imprecise-scrolling t
       redisplay-skip-fontification-on-input t
       inhibit-compacting-font-caches t)
 
-;; linux
-(if (eq system-type 'gnu/linux)
-    (progn
-      ;; more gc tuning
-      (setq-default read-process-output-max
-                    (max read-process-output-max
-                         (condition-case nil
-                             (with-temp-buffer
-                               (insert-file-contents-literally "/proc/sys/fs/pipe-max-size")
-                               (string-to-number (buffer-string)))
-                           ((debug error) 0))))))
-
-
-
-;; keybinds
-;; text manipulation
+;; Key bindings.
+;; Text manipulation.
 (global-set-key (kbd "C-c a") 'align)
 (global-set-key (kbd "C-,") 'duplicate-line)
 (global-set-key (kbd "C-.") 'kill-whole-line)
@@ -93,7 +75,7 @@
 (global-set-key (kbd "C-c d") 'xref-find-definitions)
 (global-set-key (kbd "C-c x") 'xref-find-references)
 
-;; packages - builtin
+;; Built-in packages.
 (use-package tramp
   :custom
   (enable-remote-dir-locals t)
@@ -114,15 +96,16 @@
 
 (use-package eldoc
   :custom
-  (eldoc-echo-area-use-multiline-p nil)
+  (eldoc-echo-area-use-multiline-p t)
   (eldoc-echo-area-display-truncation-message nil)
-  (eldoc-documentation-function 'eldoc-documentation-compose)
-  (eldoc-documentation-strategy 'eldoc-documentation-compose)
+  (eldoc-echo-area-prefer-doc-buffer t)
+  (eldoc-documentation-strategy #'eldoc-documentation-compose)
   :bind
   (:map help-map
         ("y" . #'eldoc-print-current-symbol-info)))
 
 (use-package shell
+  :commands shell
   :config
   (defun m/uniquify-shell-name-advice (&rest r)
     (rename-buffer
@@ -147,30 +130,26 @@
 
 (use-package savehist
   :config
-  (add-to-list 'savehist-additional-variables 'vertico-repeat-history)
+  (savehist-mode 1)
   :custom
   (savehist-additional-variables '(kill-ring
                                    vertico-repeat-history))
   (history-delete-duplicates t)
   (history-length 10000))
 
-(use-package flymake)
-(use-package flycheck
-  :init (global-flycheck-mode))
+(use-package flymake
+  :defer t)
 
-;; use-package bootstrap & packages
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(require 'use-package)
-(setq use-package-always-ensure t)
-
-(use-package pretty-sha-path)
+;; Completion and external packages.
+(use-package pretty-sha-path
+  :ensure t)
 (use-package vundo
-  :defer t
+  :ensure t
+  :commands vundo
   :custom
   (vundo-glyph-alist vundo-unicode-symbols))
 (use-package marginalia
+  :ensure t
   :init
   (marginalia-mode 1)
   :custom
@@ -179,29 +158,69 @@
   :bind (:map minibuffer-local-map
               ("M-m" . marginalia-cycle)))
 (use-package orderless
+  :ensure t
   :custom
   (completion-styles '(orderless basic partial-completion))
   (completion-category-overrides '((file (styles basic partial-completion))
                                    (eglot (styles orderless flex basic))))
   (orderless-matching-styles '(orderless-literal orderless-regexp)))
 (use-package company
+  :ensure t
   :hook (prog-mode . company-mode)
   :config
-  (setq company-idle-delay 0.0)
+  (setq company-idle-delay 0.15)
   (setq company-minimum-prefix-length 2))
 (use-package which-key
+  :ensure t
   :config
   (which-key-mode))
-(use-package magit)
+(use-package magit
+  :ensure t
+  :commands (magit-status magit-dispatch magit-file-dispatch))
 (use-package doom-modeline
+  :ensure t
   :hook (after-init . doom-modeline-mode))
-(use-package helpful)
+(use-package helpful
+  :ensure t
+  :commands (helpful-callable helpful-function helpful-macro helpful-command
+             helpful-variable helpful-key helpful-at-point))
 (use-package ace-window
+  :ensure t
   :bind (("M-o" . ace-window)))
+;; Nix editing and explicit formatting.
+(defun nixfmt-buffer ()
+  "Format the current buffer with nixfmt, leaving it unchanged on failure."
+  (interactive)
+  (barf-if-buffer-read-only)
+  (let ((program (or (executable-find "nixfmt")
+                     (user-error "Cannot find nixfmt in exec-path")))
+        (source-buffer (current-buffer))
+        (error-file (make-temp-file "nixfmt-errors-")))
+    (unwind-protect
+        (with-temp-buffer
+          (let ((output-buffer (current-buffer)))
+            (with-current-buffer source-buffer
+              (save-restriction
+                (widen)
+                (let ((status (call-process-region
+                               (point-min) (point-max) program nil
+                               (list output-buffer error-file) nil)))
+                  (unless (eq status 0)
+                    (user-error "nixfmt failed (%s): %s"
+                                status
+                                (with-temp-buffer
+                                  (insert-file-contents error-file)
+                                  (buffer-string))))
+                  (save-excursion
+                    (atomic-change-group
+                      (replace-buffer-contents output-buffer))))))))
+      (delete-file error-file))))
+
 (use-package nix-mode
-  :mode ("\\.nix\\'" "\\.nix.in\\'"))
-(use-package nixpkgs-fmt)
-;; (add-hook 'nix-mode-hook 'nix-nixfmt-bin)
+  :ensure t
+  :mode ("\\.nix\\'" "\\.nix.in\\'")
+  :bind (:map nix-mode-map
+              ("C-c C-f" . nixfmt-buffer)))
 (use-package nix-drv-mode
   :ensure nix-mode
   :mode "\\.drv\\'")
@@ -212,16 +231,19 @@
   :ensure nix-mode
   :commands (nix-repl))
 (use-package rcirc
+  :commands rcirc
   :config
   (add-to-list 'rcirc-server-alist
                '("irc.oftc.net"
                  :channels ("#cat-v"))))
 
-(use-package nerd-icons)
+(use-package nerd-icons
+  :ensure t)
 (load-file "~/.emacs.d/acme-mouse.el")
 
 ;; theme
 (use-package doom-themes
+  :ensure t
   :config
   (load-theme 'doom-one t))
 
@@ -230,7 +252,6 @@
   :ensure t
   :config
   (dashboard-setup-startup-hook)
-  (setq dashboard-startup-banner 'logo)
   (setq dashboard-startup-banner 'official)
   (setq dashboard-center-content t)
   (setq dashboard-set-navigator t)
@@ -238,9 +259,10 @@
   (setq dashboard-set-heading-icons t)
   (setq dashboard-items '((recents  . 5)))
 
-(setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*"))))
+  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*"))))
 
 (use-package vertico
+  :ensure t
   :init
   (vertico-mode)
   :custom
@@ -248,67 +270,70 @@
   (vertico-count 10)
   (vertico-resize t)
   (vertico-preselect 'prompt)
-  (enable-recursive-minibuffers)
+  (enable-recursive-minibuffers t)
   :config
   (setq completion-auto-help t)
   (setq completion-show-inline-help t)
   (setq completion-auto-select 'completion-at-point))
 
 (use-package tree-sitter
+  :ensure t
   :hook (prog-mode . tree-sitter-mode)
   :config
-  (use-package tree-sitter-langs))
+  (use-package tree-sitter-langs
+    :ensure t))
 
 (use-package multiple-cursors
+  :ensure t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C-<" . mc/mark-all-like-this)))
 
-;; LSP
+;; Language services: Eglot manages Flymake diagnostics.
 (use-package eglot
   :hook ((c-mode . eglot-ensure)
-         (c++-mode . eglot-ensure))
+         (c++-mode . eglot-ensure)
+         (c-ts-mode . eglot-ensure)
+         (c++-ts-mode . eglot-ensure))
   :config
   (setq eglot-sync-connect nil)
   (setq eglot-connect-timeout 30)
   (setq eglot-report-progress t)
-  (setq eglot-extend-to-xref t)
-  (setq-default eglot-workspace-configuration
-                '((:c :formatting (:indentWidth 4))
-                  (:cpp :formatting (:indentWidth 4))
-                  (:c :indexing (:trackReferences t))
-                  (:cpp :indexing (:trackReferences t)))))
+  (setq eglot-extend-to-xref t))
 
-(setq eldoc-echo-area-use-multiline-p t)
-(setq eldoc-echo-area-display-truncation-message nil)
-(setq eldoc-echo-area-prefer-doc-buffer t)
-(setq eldoc-documentation-strategy #'eldoc-documentation-compose)
-
-;; LSP tuning
+;; Process output tuning.
 (setq read-process-output-max (* 1024 1024))
 
-;; galaxy scrolling
-(defun galaxy-brain-scroll-amount ()
-  (let* ((window-ypos (nth 1 (window-edges)))
-         (screen-ypos (cddr (mouse-position)))
-         (amount (max 1
-                      (- screen-ypos (if (null header-line-format)
-                                         window-ypos
-                                       (1+ window-ypos))))))
-    amount))
+;; Scroll by the pointer's row in the event window.
+(defun galaxy-brain-scroll-amount (event)
+  "Return a scroll amount based on EVENT's row, or one if unavailable."
+  (let* ((position (event-start event))
+         (window (posn-window position))
+         (coordinates (posn-x-y position)))
+    (if (and (window-live-p window)
+             (consp coordinates)
+             (numberp (cdr coordinates)))
+        (max 1 (/ (cdr coordinates)
+                  (frame-char-height (window-frame window))))
+      1)))
 
 (defun my-mouse-wheel-scroll (event)
+  "Scroll EVENT's window according to the pointer's row."
   (interactive "e")
-  (let ((mouse-wheel-scroll-amount (list (galaxy-brain-scroll-amount))))
+  (let ((mouse-wheel-follow-mouse t)
+        (mouse-wheel-scroll-amount (list (galaxy-brain-scroll-amount event))))
     (mwheel-scroll event)))
 
 (global-set-key [wheel-up] 'my-mouse-wheel-scroll)
 (global-set-key [wheel-down] 'my-mouse-wheel-scroll)
 
-(defun describe-package-at-point ()
-  `Run 'describe-package' on the space-delimited string under the point.'
-  (interactive)
-  (describe-package (thing-at-point 'word)))
+;; Package help.
+(defun describe-package-at-point (package)
+  "Describe PACKAGE, interactively using the symbol at point."
+  (interactive (list (symbol-at-point)))
+  (unless package
+    (user-error "No package symbol at point"))
+  (describe-package package))
 
-(keymap-local-set "C-h C-p" (lambda () (interactive) (describe-package (intern (thing-at-point 'symbol)))))
+(global-set-key (kbd "C-h C-p") #'describe-package-at-point)

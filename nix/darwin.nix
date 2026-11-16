@@ -10,7 +10,7 @@ in
   users.users.nikita.home = "/Users/nikita";
 
   environment.shellAliases = {
-    update = "nix flake update --flake ~/nix/; sudo darwin-rebuild switch --flake ~/nix";
+    update = "nix flake update --flake ~/nix/ && sudo darwin-rebuild switch --flake ~/nix";
   };
 
   homebrew = {

@@ -1,4 +1,4 @@
-;;; acme-mouse.el --- mouse-button chording
+;;; acme-mouse.el --- mouse-button chording -*- lexical-binding: t; -*-
 
 ;; Author: Alex Kritikos (my gmail.com username is alex.kritikos)
 ;; Copyright (C) 2009, Alex Kritikos, see section 'Terms'.
@@ -40,15 +40,21 @@
 ;; want it to be. Leads to large highlighted regions. Goes away after
 ;; a click.
 
-(require 'cl)
+(require 'cl-lib)
 
 ;; Acme mouse chording doesn't make much sense without
 ;; delete-selection mode
 (delete-selection-mode t)
 ;; Acme doesn't set the selection until you explicitly copy
 (setq mouse-drag-copy-region nil)
-(setq acme-mouse-state 'none)
-(setq acme-last-command 'none)
+(defvar acme-mouse-state 'none
+  "Current mouse-button chord state.")
+(defvar acme-last-command 'none
+  "Last command performed during the current chord.")
+(defvar acme-start nil
+  "Start of the region saved for mouse chording.")
+(defvar acme-end nil
+  "End of the region saved for mouse chording.")
 
 ;; default: mouse-drag-region
 (global-set-key [(down-mouse-1)] 'acme-down-mouse-1)
@@ -143,14 +149,14 @@
   (if (eq acme-mouse-state 'left)
       (progn
         (setq acme-mouse-state 'left-right)
-        (case acme-last-command
-          ('none (mouse-set-point click)
-                 (acme-select-region)
-                 (delete-region (mark) (point))
-                 (yank arg))
-          ('cut (undo)
-                (set-mark acme-start)
-                (goto-char acme-end)))
+        (cl-case acme-last-command
+          (none (mouse-set-point click)
+                (acme-select-region)
+                (delete-region (mark) (point))
+                (yank arg))
+          (cut (undo)
+               (set-mark acme-start)
+               (goto-char acme-end)))
         (setq acme-last-command 'paste)
         (setq deactivate-mark nil)
         (activate-mark))))
@@ -163,19 +169,21 @@
 
 ;; Search - modified from Dan McCarthy's acme-search.el
 
-(defun header-line-active-p ()
+(defun acme-header-line-active-p ()
   (not (null header-line-format)))
 
-(defun move-mouse-to-point ()
+(defun acme-move-mouse-to-point ()
   "Move the mouse pointer to point in the current window."
-  (let* ((coords (posn-col-row (posn-at-point)))
-	 (window-coords (window-inside-edges))
-	 (x (+ (car coords) (car window-coords) -1)) ;the fringe is 0
-	 (y (+ (cdr coords) (cadr window-coords)
-	       (if (header-line-active-p)
-		   -1
-		 0))))
-    (set-mouse-position (selected-frame) x y)))
+  (let* ((position (posn-at-point))
+         (coords (and position (posn-col-row position))))
+    (when (and (numberp (car coords)) (numberp (cdr coords)))
+      (let* ((window-coords (window-inside-edges))
+             (x (+ (car coords) (car window-coords) -1)) ;the fringe is 0
+             (y (+ (cdr coords) (cadr window-coords)
+                   (if (acme-header-line-active-p)
+                       -1
+                     0))))
+        (set-mouse-position (selected-frame) x y)))))
 
 (defun acme-highlight-search (sym)
   "Set the region to the current search result. Assume point is
@@ -191,8 +199,12 @@ This is inspired by Rob Pike's Acme."
                  (buffer-substring (mark) (point))
                (mouse-set-point posn)
                (thing-at-point 'filename))))
+    (unless (and (stringp sym) (> (length sym) 0))
+      (user-error "No symbol or filename at mouse position"))
     (if (file-readable-p sym)
-        (special-display-popup-frame (find-file-noselect sym nil nil nil))
+        (display-buffer (find-file-noselect sym)
+                        '((display-buffer-reuse-window display-buffer-pop-up-frame)
+                          (reusable-frames . 0)))
       (if (search-forward sym nil t)
           (acme-highlight-search sym)
         (let ((saved-point (point)))
@@ -205,6 +217,6 @@ This is inspired by Rob Pike's Acme."
     (unless (posn-at-point)
       (universal-argument)
       (recenter))
-    (move-mouse-to-point)))
+    (acme-move-mouse-to-point)))
 
 (provide 'acme-mouse)
